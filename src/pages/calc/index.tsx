@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import init, { add } from "wasm-lib";
+import Layout from "../../components/templates/layout";
 
 const Calculator: NextPage = () => {
   const [val1, setVal1] = useState(0);
@@ -21,7 +22,7 @@ const Calculator: NextPage = () => {
   }, [val1, val2]);
 
   return (
-    <>
+    <Layout>
       <input
         type="number"
         value={val1}
@@ -34,7 +35,7 @@ const Calculator: NextPage = () => {
         onChange={(e) => handleChange(e, setVal2)}
       />{" "}
       = {ans}
-    </>
+    </Layout>
   );
 };
 

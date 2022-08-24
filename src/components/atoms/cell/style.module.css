@@ -1,0 +1,39 @@
+.cell {
+    float: left;
+    width: 25px;
+    height: 25px;
+}
+
+.open {
+    background-color: white;
+    color: black;
+}
+
+.close {
+    background-color: black;
+    color: white;
+}
+
+.start {
+    background-color: pink;
+}
+
+.goal {
+    background-color: skyblue;
+}
+
+/* .top {
+    border-top: solid black 3px;
+}
+
+.left {
+    border-left: solid black 3px;
+}
+
+.right {
+    border-right: solid black 3px;
+}
+
+.bottom {
+    border-bottom: solid black 3px;
+} */
