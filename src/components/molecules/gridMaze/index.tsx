@@ -43,6 +43,7 @@ const Maze: React.FC<Props> = (props) => {
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
   const [minDist, setMinDist] = useState(-1);
+  const [step, setStep] = useState(-1);
 
   useEffect(() => {
     init().then(() => {
@@ -50,20 +51,25 @@ const Maze: React.FC<Props> = (props) => {
       grid.build();
       setGrid(grid);
       setMinDist(-1);
+      setStep(-1);
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
     });
   }, [props.seed]);
 
   useEffect(() => {
     if (grid && props.solver === "bfs") {
-      const result = grid.bfs();
+      const step = grid.bfs();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       setMinDist(grid.get_goal_value());
+      setStep(step);
+
       console.log("BFS Done!");
     } else if (grid && props.solver === "astar_manhattan") {
-      const result = grid.astar();
+      const step = grid.astar();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       setMinDist(grid.get_goal_value());
+      setStep(step);
+
       console.log("A* Done!");
     }
   }, [props.solver]);
@@ -71,7 +77,10 @@ const Maze: React.FC<Props> = (props) => {
   return (
     <>
       <div>{maze}</div>
-      <div>Minimum Distance: {minDist != -1 ? minDist : "-"}</div>
+      <div>
+        Minimum Distance: {minDist != -1 ? minDist : "-"}, Calculation Steps:{" "}
+        {step != -1 ? step : "-"}
+      </div>
     </>
   );
 };

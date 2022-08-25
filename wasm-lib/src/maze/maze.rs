@@ -170,9 +170,12 @@ impl Grid {
         queue.push_back((sx, sy));
         self.values[sid] = 0;
 
+        let mut step = 0;
         'main: while let Some((x, y)) = queue.pop_front() {
             let cid = self.get_index(x, y);
             for i in 0..4 {
+                step += 1;
+
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
@@ -191,7 +194,7 @@ impl Grid {
                 }
             }
         }
-        self.values[gid]
+        step
     }
 
     pub fn astar(&mut self) -> i32 {
@@ -207,9 +210,12 @@ impl Grid {
         heap.push((Reverse(cost), sx, sy));
         self.values[sid] = 0;
 
+        let mut step = 0;
         'main: while let Some((_, x, y)) = heap.pop() {
             let cid = self.get_index(x, y);
             for i in 0..4 {
+                step += 1;
+
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
@@ -230,7 +236,7 @@ impl Grid {
             }
         }
 
-        self.values[gid]
+        step
     }
 
     pub fn calc_heuristics(&self, x0: u32, y0: u32, x1: u32, y1: u32, option: &str) -> i32 {
