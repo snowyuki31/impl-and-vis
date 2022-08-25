@@ -54,7 +54,7 @@ const Maze: React.FC<Props> = (props) => {
       setStep(-1);
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
     });
-  }, [props.seed]);
+  }, [props.seed, props.width, props.height]);
 
   useEffect(() => {
     if (grid && props.solver === "bfs") {
@@ -75,13 +75,23 @@ const Maze: React.FC<Props> = (props) => {
   }, [props.solver]);
 
   return (
-    <>
-      <div>{maze}</div>
-      <div>
-        Minimum Distance: {minDist != -1 ? minDist : "-"}, Calculation Steps:{" "}
-        {step != -1 ? step : "-"}
+    <div className={styles.container}>
+      <div className={styles.maze}>{maze}</div>
+      <div className={styles.legend}>
+        <div>
+          Start
+          <Cell states={["start", "legend"]} value={-1} />
+        </div>
+        <div>
+          Goal
+          <Cell states={["goal", "legend"]} value={-1} />
+        </div>
       </div>
-    </>
+      <div className={styles.result}>
+        <div>Minimum Distance: {minDist != -1 ? minDist : "-"}</div>
+        <div>Calculation Steps: {step != -1 ? step : "-"}</div>
+      </div>
+    </div>
   );
 };
 

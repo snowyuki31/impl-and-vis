@@ -1,4 +1,20 @@
 .row {
-    display: flex;
     flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.maze {
+    display: flex;
+    justify-content: space-between;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.result {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
