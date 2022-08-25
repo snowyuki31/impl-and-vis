@@ -1,4 +1,6 @@
 use crate::utils::xorshift::Xorshift;
+use std::cmp::Reverse;
+use std::collections::{BinaryHeap, VecDeque};
 use wasm_bindgen::prelude::*;
 
 const DIJ: [(u32, u32); 4] = [(0, 1), (1, 0), (0, !0), (!0, 0)];
@@ -67,8 +69,10 @@ pub enum GridCell {
 pub struct Grid {
     width: u32,
     height: u32,
+    start: (u32, u32),
+    goal: (u32, u32),
     cells: Vec<GridCell>,
-    values: Vec<u32>,
+    values: Vec<i32>,
     seed: u32,
     rng: Xorshift,
 }
@@ -79,16 +83,22 @@ impl Grid {
         let rng = Xorshift::with_seed(seed.into());
         let size = width * height;
         let cells = vec![GridCell::Close; size as usize];
-        let values = vec![0; size as usize];
+        let values = vec![-1; size as usize];
 
         Grid {
             width,
             height,
+            start: (!0, !0),
+            goal: (!0, !0),
             cells,
             values,
             seed,
             rng,
         }
+    }
+
+    pub fn initialize_values(&mut self) {
+        self.values = vec![-1; (self.width * self.height) as usize];
     }
 
     pub fn build(&mut self) {
@@ -145,10 +155,106 @@ impl Grid {
 
         let (gx, gy) = goals[self.rng.rand(goals.len() as u64) as usize];
         self.cells[(gx * self.width + gy) as usize] = GridCell::Goal;
+        self.start = (sx, sy);
+        self.goal = (gx, gy);
+    }
+
+    pub fn bfs(&mut self) -> i32 {
+        self.initialize_values();
+        let (sx, sy) = self.start;
+        let (gx, gy) = self.goal;
+        let sid = self.get_index(sx, sy);
+        let gid = self.get_index(gx, gy);
+
+        let mut queue = VecDeque::new();
+        queue.push_back((sx, sy));
+        self.values[sid] = 0;
+
+        'main: while let Some((x, y)) = queue.pop_front() {
+            let cid = self.get_index(x, y);
+            for i in 0..4 {
+                let (dx, dy) = DIJ[i];
+                let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
+                let nid = self.get_index(nx, ny);
+
+                if self.check_inside(nx, ny)
+                    && self.cells[nid] == GridCell::Open
+                    && self.values[nid] == -1
+                {
+                    self.values[nid] = self.values[cid] + 1;
+                    queue.push_back((nx, ny));
+                }
+
+                if nid == gid {
+                    self.values[nid] = self.values[cid] + 1;
+                    break 'main;
+                }
+            }
+        }
+        self.values[gid]
+    }
+
+    pub fn aster_manhattan(&mut self) -> i32 {
+        self.initialize_values();
+        let (sx, sy) = self.start;
+        let (gx, gy) = self.goal;
+        let sid = self.get_index(sx, sy);
+        let gid = self.get_index(gx, gy);
+
+        let mut heap = BinaryHeap::new();
+
+        let cost = self.calc_heuristics(sx, sy, gx, gy, "");
+        heap.push((Reverse(cost), sx, sy));
+        self.values[sid] = 0;
+
+        'main: while let Some((_, x, y)) = heap.pop() {
+            let cid = self.get_index(x, y);
+            for i in 0..4 {
+                let (dx, dy) = DIJ[i];
+                let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
+                let nid = self.get_index(nx, ny);
+                let ncost = self.values[cid] + 1 + self.calc_heuristics(nx, ny, gx, gy, "");
+
+                if self.check_inside(nx, ny)
+                    && self.cells[nid] == GridCell::Open
+                    && self.values[nid] == -1
+                {
+                    self.values[nid] = self.values[cid] + 1;
+                    heap.push((Reverse(ncost), nx, ny));
+                }
+
+                if nid == gid {
+                    self.values[nid] = self.values[cid] + 1;
+                    break 'main;
+                }
+            }
+        }
+
+        self.values[gid]
+    }
+
+    pub fn calc_heuristics(&self, x0: u32, y0: u32, x1: u32, y1: u32, option: &str) -> i32 {
+        if option == "manhattan" {
+            return self.calc_manhattan_distance(x0, y0, x1, y1);
+        } else {
+            return self.calc_euclidean_distance(x0, y0, x1, y1);
+        }
+    }
+
+    pub fn calc_euclidean_distance(&self, x0: u32, y0: u32, x1: u32, y1: u32) -> i32 {
+        ((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1)) as i32
+    }
+
+    pub fn calc_manhattan_distance(&self, x0: u32, y0: u32, x1: u32, y1: u32) -> i32 {
+        (x0.abs_diff(x1) + y0.abs_diff(y1)) as i32
     }
 
     pub fn check_inside(&self, row: u32, column: u32) -> bool {
-        return row < self.width && column < self.height;
+        row < self.width && column < self.height
+    }
+
+    pub fn get_index(&self, row: u32, column: u32) -> usize {
+        (row * self.width + column) as usize
     }
 
     pub fn width(&self) -> u32 {
@@ -169,5 +275,13 @@ impl Grid {
 
     pub fn get(&self, row: u32, column: u32) -> GridCell {
         self.cells[(row * self.width + column) as usize]
+    }
+
+    pub fn get_value(&self, row: u32, column: u32) -> i32 {
+        self.values[self.get_index(row, column)]
+    }
+
+    pub fn get_goal_value(&self) -> i32 {
+        self.values[self.get_index(self.goal.0, self.goal.1)]
     }
 }

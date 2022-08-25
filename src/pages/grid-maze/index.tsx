@@ -11,7 +11,8 @@ import Link from "@mui/material/Link";
 const GridMaze: NextPage = () => {
   const [width, setWidth] = useState(45);
   const [height, setHeight] = useState(45);
-  const [seed, setSeed] = useState(42);
+  const [seed, setSeed] = useState(44);
+  const [solver, setSolver] = useState("None");
 
   return (
     <Layout>
@@ -22,9 +23,12 @@ const GridMaze: NextPage = () => {
         variant="standard"
         size="small"
         value={seed}
-        onChange={(e) => handleChange(e, setSeed)}
+        onChange={(e) => {
+          handleChange(e, setSeed);
+          setSolver("None");
+        }}
       ></TextField>
-      <Maze width={width} height={height} seed={seed}></Maze>
+      <Maze width={width} height={height} seed={seed} solver={solver}></Maze>
       <div>
         <div>
           Start
@@ -37,8 +41,12 @@ const GridMaze: NextPage = () => {
       </div>
       <h3>Solve by</h3>
       <Stack spacing={2} direction="row">
-        <Button variant="outlined">BFS</Button>
-        <Button variant="outlined">A*</Button>
+        <Button variant="outlined" onClick={() => setSolver("bfs")}>
+          BFS
+        </Button>
+        <Button variant="outlined" onClick={() => setSolver("astar_manhattan")}>
+          A*
+        </Button>
       </Stack>
     </Layout>
   );

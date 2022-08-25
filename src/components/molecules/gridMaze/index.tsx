@@ -1,6 +1,5 @@
 import Cell from "../../atoms/cell";
 import init, { Grid, GridCell } from "wasm-lib";
-import { memory } from "wasm-lib/wasm_lib_bg.wasm";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import styles from "./style.module.css";
 
@@ -8,6 +7,7 @@ type Props = {
   width: number;
   height: number;
   seed: number;
+  solver: string;
 };
 
 function buildMaze(grid: Grid, width: number, height: number) {
@@ -28,6 +28,10 @@ function buildMaze(grid: Grid, width: number, height: number) {
         states.push("open");
       }
 
+      if (grid.get_value(i, j) != -1 && state == GridCell.Open) {
+        states.push("visited");
+      }
+
       row.push(<Cell states={states} value={i * width + j}></Cell>);
     }
     elements.push(<div className={styles.row}>{row}</div>);
@@ -36,23 +40,40 @@ function buildMaze(grid: Grid, width: number, height: number) {
 }
 
 const Maze: React.FC<Props> = (props) => {
-  const [grid, setGrid] = useState<JSX.Element[]>();
+  const [grid, setGrid] = useState<Grid>();
+  const [maze, setMaze] = useState<JSX.Element[]>();
+  const [minDist, setMinDist] = useState(-1);
 
   useEffect(() => {
     init().then(() => {
       const grid = Grid.new(props.width, props.height, props.seed);
       grid.build();
-      // const cellsPtr = grid.cells();
-      // const cells = new Uint8Array(
-      //   memory.buffer,
-      //   cellsPtr,
-      //   grid.width() * grid.height()
-      // );
-      setGrid(buildMaze(grid, grid.width(), grid.height()));
+      setGrid(grid);
+      setMinDist(-1);
+      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
     });
   }, [props.seed]);
 
-  return <div>{grid}</div>;
+  useEffect(() => {
+    if (grid && props.solver === "bfs") {
+      const result = grid.bfs();
+      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
+      setMinDist(grid.get_goal_value());
+      console.log("BFS Done!");
+    } else if (grid && props.solver === "astar_manhattan") {
+      const result = grid.aster_manhattan();
+      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
+      setMinDist(grid.get_goal_value());
+      console.log("A* Done!");
+    }
+  }, [props.solver]);
+
+  return (
+    <>
+      <div>{maze}</div>
+      <div>Minimum Distance: {minDist != -1 ? minDist : "-"}</div>
+    </>
+  );
 };
 
 export default Maze;

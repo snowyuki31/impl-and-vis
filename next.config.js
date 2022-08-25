@@ -7,6 +7,7 @@ const nextConfig = {
       asyncWebAssembly: true,
       layers: true,
     };
+    config.resolve.extensions = [".ts", ".tsx", ".js", ".wasm"];
     config.output.webassemblyModuleFilename =
       (isServer ? "../" : "") + "static/wasm/webassembly.wasm";
     return config;

@@ -26,6 +26,10 @@
     background-color: khaki;
 }
 
+.visited {
+    background-color: bisque;
+}
+
 /* .top {
     border-top: solid black 3px;
 }
