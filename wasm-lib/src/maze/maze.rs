@@ -194,7 +194,7 @@ impl Grid {
         self.values[gid]
     }
 
-    pub fn aster(&mut self) -> i32 {
+    pub fn astar(&mut self) -> i32 {
         self.initialize_values();
         let (sx, sy) = self.start;
         let (gx, gy) = self.goal;
