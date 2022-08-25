@@ -117,8 +117,8 @@ const Maze: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.result}>
-        <div>Minimum Distance: {minDist != -1 ? minDist : "-"}</div>
-        <div>Visited Cell Counts: {iter != -1 ? iter : "-"}</div>
+        <div>Distance: {minDist != -1 ? minDist : "-"}</div>
+        <div>Visited Cells: {iter != -1 ? iter : "-"}</div>
       </div>
     </div>
   );

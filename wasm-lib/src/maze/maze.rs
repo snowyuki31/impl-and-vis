@@ -246,7 +246,7 @@ impl Grid {
 
         let mut visited_cells = Vec::new();
         let mut heap = BinaryHeap::new();
-        let cost = self.calc_heuristics(sx, sy, gx, gy, "");
+        let cost = self.calc_heuristics(sx, sy, gx, gy, "manhattan");
         heap.push((Reverse(cost), 0, sx, sy));
 
         while let Some((_, d, x, y)) = heap.pop() {
@@ -265,7 +265,7 @@ impl Grid {
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
-                let ncost = d + 1 + self.calc_heuristics(nx, ny, gx, gy, "");
+                let ncost = d + 1 + self.calc_heuristics(nx, ny, gx, gy, "manhattan");
 
                 if self.check_inside(nx, ny)
                     && self.cells[nid] != GridCell::Close
@@ -283,11 +283,11 @@ impl Grid {
         if option == "manhattan" {
             return self.calc_manhattan_distance(x0, y0, x1, y1);
         } else {
-            return self.calc_euclidean_distance(x0, y0, x1, y1);
+            return self.calc_squared_euclidean_distance(x0, y0, x1, y1);
         }
     }
 
-    pub fn calc_euclidean_distance(&self, x0: u32, y0: u32, x1: u32, y1: u32) -> i32 {
+    pub fn calc_squared_euclidean_distance(&self, x0: u32, y0: u32, x1: u32, y1: u32) -> i32 {
         ((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1)) as i32
     }
 
