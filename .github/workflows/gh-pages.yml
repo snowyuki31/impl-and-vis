@@ -27,9 +27,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Build Wasm
-        run: npm run build:wasm
-
       - run: npm ci
       - run: npm run format
       # - run: npm run test
