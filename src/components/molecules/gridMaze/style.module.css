@@ -1,12 +1,8 @@
-.row {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-}
-
 .maze {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
 }
+
 
 .legend {
     display: flex;
@@ -18,4 +14,8 @@
     flex-flow: column;
     align-items: center;
     padding-top: 10px;
+}
+
+.container {
+    width: 40%;
 }

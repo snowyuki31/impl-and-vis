@@ -32,17 +32,17 @@ export class Grid {
 */
   build(): void;
 /**
-* @returns {number}
+* @returns {Uint32Array}
 */
-  bfs(): number;
+  bfs(): Uint32Array;
 /**
-* @returns {number}
+* @returns {Uint32Array}
 */
-  dfs(): number;
+  dfs(): Uint32Array;
 /**
-* @returns {number}
+* @returns {Uint32Array}
 */
-  astar(): number;
+  astar(): Uint32Array;
 /**
 * @param {number} x0
 * @param {number} y0
@@ -149,9 +149,9 @@ export interface InitOutput {
   readonly grid_new: (a: number, b: number, c: number) => number;
   readonly grid_initialize_values: (a: number) => void;
   readonly grid_build: (a: number) => void;
-  readonly grid_bfs: (a: number) => number;
-  readonly grid_dfs: (a: number) => number;
-  readonly grid_astar: (a: number) => number;
+  readonly grid_bfs: (a: number, b: number) => void;
+  readonly grid_dfs: (a: number, b: number) => void;
+  readonly grid_astar: (a: number, b: number) => void;
   readonly grid_calc_heuristics: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
   readonly grid_calc_euclidean_distance: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly grid_calc_manhattan_distance: (a: number, b: number, c: number, d: number, e: number) => number;
@@ -171,9 +171,10 @@ export interface InitOutput {
   readonly xorshift_rand: (a: number, b: number, c: number, d: number) => void;
   readonly xorshift_randf: (a: number) => number;
   readonly add: (a: number, b: number) => number;
+  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
+  readonly __wbindgen_free: (a: number, b: number) => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
-  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
 }
 
 /**

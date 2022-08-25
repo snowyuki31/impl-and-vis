@@ -159,122 +159,124 @@ impl Grid {
         self.goal = (gx, gy);
     }
 
-    pub fn bfs(&mut self) -> i32 {
+    pub fn bfs(&mut self) -> Vec<usize> {
         self.initialize_values();
         let (sx, sy) = self.start;
         let (gx, gy) = self.goal;
         let sid = self.get_index(sx, sy);
         let gid = self.get_index(gx, gy);
 
+        let mut visited_cells = Vec::new();
         let mut queue = VecDeque::new();
-        queue.push_back((sx, sy));
-        self.values[sid] = 0;
+        queue.push_back((0, sx, sy));
 
-        let mut step = 0;
-        'main: while let Some((x, y)) = queue.pop_front() {
+        while let Some((d, x, y)) = queue.pop_front() {
             let cid = self.get_index(x, y);
-            for i in 0..4 {
-                step += 1;
+            self.values[cid] = d;
 
+            if cid != gid && cid != sid {
+                visited_cells.push(cid);
+            }
+
+            if cid == gid {
+                break;
+            }
+
+            for i in 0..4 {
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
 
                 if self.check_inside(nx, ny)
-                    && self.cells[nid] == GridCell::Open
+                    && self.cells[nid] != GridCell::Close
                     && self.values[nid] == -1
                 {
-                    self.values[nid] = self.values[cid] + 1;
-                    queue.push_back((nx, ny));
-                }
-
-                if nid == gid {
-                    self.values[nid] = self.values[cid] + 1;
-                    break 'main;
+                    queue.push_back((d + 1, nx, ny));
                 }
             }
         }
-        step
+        visited_cells
     }
 
-    pub fn dfs(&mut self) -> i32 {
+    pub fn dfs(&mut self) -> Vec<usize> {
         self.initialize_values();
         let (sx, sy) = self.start;
         let (gx, gy) = self.goal;
         let sid = self.get_index(sx, sy);
         let gid = self.get_index(gx, gy);
 
+        let mut visited_cells = Vec::new();
         let mut queue = VecDeque::new();
-        queue.push_back((sx, sy));
-        self.values[sid] = 0;
+        queue.push_back((0, sx, sy));
 
-        let mut step = 0;
-        'main: while let Some((x, y)) = queue.pop_back() {
+        while let Some((d, x, y)) = queue.pop_back() {
             let cid = self.get_index(x, y);
-            for i in 0..4 {
-                step += 1;
+            self.values[cid] = d;
 
+            if cid != gid && cid != sid {
+                visited_cells.push(cid);
+            }
+
+            if cid == gid {
+                break;
+            }
+
+            for i in 0..4 {
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
 
                 if self.check_inside(nx, ny)
-                    && self.cells[nid] == GridCell::Open
+                    && self.cells[nid] != GridCell::Close
                     && self.values[nid] == -1
                 {
-                    self.values[nid] = self.values[cid] + 1;
-                    queue.push_back((nx, ny));
-                }
-
-                if nid == gid {
-                    self.values[nid] = self.values[cid] + 1;
-                    break 'main;
+                    queue.push_back((d + 1, nx, ny));
                 }
             }
         }
-        step
+        visited_cells
     }
 
-    pub fn astar(&mut self) -> i32 {
+    pub fn astar(&mut self) -> Vec<usize> {
         self.initialize_values();
         let (sx, sy) = self.start;
         let (gx, gy) = self.goal;
         let sid = self.get_index(sx, sy);
         let gid = self.get_index(gx, gy);
 
+        let mut visited_cells = Vec::new();
         let mut heap = BinaryHeap::new();
-
         let cost = self.calc_heuristics(sx, sy, gx, gy, "");
-        heap.push((Reverse(cost), sx, sy));
-        self.values[sid] = 0;
+        heap.push((Reverse(cost), 0, sx, sy));
 
-        let mut step = 0;
-        'main: while let Some((_, x, y)) = heap.pop() {
+        while let Some((_, d, x, y)) = heap.pop() {
             let cid = self.get_index(x, y);
-            for i in 0..4 {
-                step += 1;
+            self.values[cid] = d;
 
+            if cid != gid && cid != sid {
+                visited_cells.push(cid);
+            }
+
+            if cid == gid {
+                break;
+            }
+
+            for i in 0..4 {
                 let (dx, dy) = DIJ[i];
                 let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
                 let nid = self.get_index(nx, ny);
-                let ncost = self.values[cid] + 1 + self.calc_heuristics(nx, ny, gx, gy, "");
+                let ncost = d + 1 + self.calc_heuristics(nx, ny, gx, gy, "");
 
                 if self.check_inside(nx, ny)
-                    && self.cells[nid] == GridCell::Open
+                    && self.cells[nid] != GridCell::Close
                     && self.values[nid] == -1
                 {
-                    self.values[nid] = self.values[cid] + 1;
-                    heap.push((Reverse(ncost), nx, ny));
-                }
-
-                if nid == gid {
-                    self.values[nid] = self.values[cid] + 1;
-                    break 'main;
+                    heap.push((Reverse(ncost), d + 1, nx, ny));
                 }
             }
         }
 
-        step
+        visited_cells
     }
 
     pub fn calc_heuristics(&self, x0: u32, y0: u32, x1: u32, y1: u32, option: &str) -> i32 {
