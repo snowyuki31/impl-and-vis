@@ -33,7 +33,10 @@ const GridMaze: NextPage = () => {
         <Button variant="outlined" onClick={() => setSolver("bfs")}>
           BFS
         </Button>
-        <Button variant="outlined" onClick={() => setSolver("astar_manhattan")}>
+        <Button variant="outlined" onClick={() => setSolver("dfs")}>
+          DFS
+        </Button>
+        <Button variant="outlined" onClick={() => setSolver("astar")}>
           A*
         </Button>
       </Stack>

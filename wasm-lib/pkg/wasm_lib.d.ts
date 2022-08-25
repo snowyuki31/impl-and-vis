@@ -38,6 +38,10 @@ export class Grid {
 /**
 * @returns {number}
 */
+  dfs(): number;
+/**
+* @returns {number}
+*/
   astar(): number;
 /**
 * @param {number} x0
@@ -146,6 +150,7 @@ export interface InitOutput {
   readonly grid_initialize_values: (a: number) => void;
   readonly grid_build: (a: number) => void;
   readonly grid_bfs: (a: number) => number;
+  readonly grid_dfs: (a: number) => number;
   readonly grid_astar: (a: number) => number;
   readonly grid_calc_heuristics: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
   readonly grid_calc_euclidean_distance: (a: number, b: number, c: number, d: number, e: number) => number;

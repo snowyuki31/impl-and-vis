@@ -150,6 +150,13 @@ export class Grid {
     /**
     * @returns {number}
     */
+    dfs() {
+        const ret = wasm.grid_dfs(this.ptr);
+        return ret;
+    }
+    /**
+    * @returns {number}
+    */
     astar() {
         const ret = wasm.grid_astar(this.ptr);
         return ret;

@@ -115,7 +115,7 @@ impl Grid {
         while !stack.is_empty() {
             let (mut x, mut y) = stack.swap_remove(self.rng.rand(stack.len() as u64) as usize);
 
-            while true {
+            loop {
                 let mut flag = false;
 
                 for i in SHUFFLED_DIRECTION[self.rng.rand(4) as usize] {
@@ -172,6 +172,44 @@ impl Grid {
 
         let mut step = 0;
         'main: while let Some((x, y)) = queue.pop_front() {
+            let cid = self.get_index(x, y);
+            for i in 0..4 {
+                step += 1;
+
+                let (dx, dy) = DIJ[i];
+                let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
+                let nid = self.get_index(nx, ny);
+
+                if self.check_inside(nx, ny)
+                    && self.cells[nid] == GridCell::Open
+                    && self.values[nid] == -1
+                {
+                    self.values[nid] = self.values[cid] + 1;
+                    queue.push_back((nx, ny));
+                }
+
+                if nid == gid {
+                    self.values[nid] = self.values[cid] + 1;
+                    break 'main;
+                }
+            }
+        }
+        step
+    }
+
+    pub fn dfs(&mut self) -> i32 {
+        self.initialize_values();
+        let (sx, sy) = self.start;
+        let (gx, gy) = self.goal;
+        let sid = self.get_index(sx, sy);
+        let gid = self.get_index(gx, gy);
+
+        let mut queue = VecDeque::new();
+        queue.push_back((sx, sy));
+        self.values[sid] = 0;
+
+        let mut step = 0;
+        'main: while let Some((x, y)) = queue.pop_back() {
             let cid = self.get_index(x, y);
             for i in 0..4 {
                 step += 1;

@@ -64,7 +64,14 @@ const Maze: React.FC<Props> = (props) => {
       setStep(step);
 
       console.log("BFS Done!");
-    } else if (grid && props.solver === "astar_manhattan") {
+    } else if (grid && props.solver === "dfs") {
+      const step = grid.dfs();
+      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
+      setMinDist(grid.get_goal_value());
+      setStep(step);
+
+      console.log("DFS Done!");
+    } else if (grid && props.solver === "astar") {
       const step = grid.astar();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       setMinDist(grid.get_goal_value());

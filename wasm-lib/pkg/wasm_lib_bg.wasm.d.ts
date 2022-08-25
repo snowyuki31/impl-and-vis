@@ -6,6 +6,7 @@ export function grid_new(a: number, b: number, c: number): number;
 export function grid_initialize_values(a: number): void;
 export function grid_build(a: number): void;
 export function grid_bfs(a: number): number;
+export function grid_dfs(a: number): number;
 export function grid_astar(a: number): number;
 export function grid_calc_heuristics(a: number, b: number, c: number, d: number, e: number, f: number, g: number): number;
 export function grid_calc_euclidean_distance(a: number, b: number, c: number, d: number, e: number): number;
