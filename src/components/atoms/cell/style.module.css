@@ -1,7 +1,11 @@
 .cell {
     float: left;
-    width: 25px;
-    height: 25px;
+    width: 13px;
+    height: 13px;
+}
+
+.legend {
+    float: left;
 }
 
 .open {
@@ -15,11 +19,11 @@
 }
 
 .start {
-    background-color: pink;
+    background-color: cadetblue;
 }
 
 .goal {
-    background-color: skyblue;
+    background-color: khaki;
 }
 
 /* .top {

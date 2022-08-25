@@ -40,7 +40,7 @@ const theme = createTheme({
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="lg">
         <CssBaseline />
         <Box
           sx={{
