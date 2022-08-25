@@ -36,6 +36,12 @@ jobs:
         env:
           URL_PREFIX: impl-and-vis
 
+      - name: Export Next.js app
+        run: npm run export
+
+      - name: add nojekyll
+        run: touch ./out./nojekyll
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
