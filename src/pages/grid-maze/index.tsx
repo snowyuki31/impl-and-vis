@@ -36,8 +36,7 @@ const GridMaze: NextPage = () => {
         value={solver}
         exclusive
         onChange={(event, newSolver) => {
-          console.log(newSolver);
-          setSolver(newSolver);
+          if (newSolver !== null) setSolver(newSolver);
         }}
         size="medium"
       >

@@ -65,27 +65,26 @@ const Maze: React.FC<Props> = (props) => {
     setMinDist(-1);
     setIter(0);
 
-    if (grid && props.solver === "bfs") {
+    if (grid) {
       grid.initialize_values();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
-      const result = grid.bfs();
-      setSteps(result);
-      setPath(grid.trace_back());
-      console.log("BFS Done!");
-    } else if (grid && props.solver === "dfs") {
-      grid.initialize_values();
-      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
-      const result = grid.dfs();
-      setSteps(result);
-      setPath(grid.trace_back());
-      console.log("DFS Done!");
-    } else if (grid && props.solver === "astar") {
-      grid.initialize_values();
-      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
-      const result = grid.astar();
-      setSteps(result);
-      setPath(grid.trace_back());
-      console.log("A* Done!");
+
+      if (props.solver === "bfs") {
+        const result = grid.bfs();
+        setSteps(result);
+        setPath(grid.trace_back());
+        console.log("BFS Done!");
+      } else if (props.solver === "dfs") {
+        const result = grid.dfs();
+        setSteps(result);
+        setPath(grid.trace_back());
+        console.log("DFS Done!");
+      } else if (props.solver === "astar") {
+        const result = grid.astar();
+        setSteps(result);
+        setPath(grid.trace_back());
+        console.log("A* Done!");
+      }
     }
   }, [props.solver]);
 
