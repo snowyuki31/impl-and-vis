@@ -27,7 +27,7 @@ const Layout = ({
   pagename: string;
   children: React.ReactNode;
 }) => {
-  const title = (pagename !== "" ? pagename + " | " : "") + "impl-and-vis";
+  const title = (pagename !== "" ? pagename + " | " : "") + "Impl-and-vis";
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">

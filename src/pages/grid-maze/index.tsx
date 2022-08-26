@@ -4,7 +4,8 @@ import Layout from "../../components/templates/layout";
 import Maze from "../../components/molecules/gridMaze";
 import Cell from "../../components/atoms/cell";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 
 const GridMaze: NextPage = () => {
@@ -29,17 +30,21 @@ const GridMaze: NextPage = () => {
       ></TextField>
       <Maze width={width} height={height} seed={seed} solver={solver}></Maze>
       <h3>Solve by</h3>
-      <Stack spacing={2} direction="row">
-        <Button variant="outlined" onClick={() => setSolver("bfs")}>
-          BFS
-        </Button>
-        <Button variant="outlined" onClick={() => setSolver("dfs")}>
-          DFS
-        </Button>
-        <Button variant="outlined" onClick={() => setSolver("astar")}>
-          A*
-        </Button>
-      </Stack>
+
+      <ToggleButtonGroup
+        color="primary"
+        value={solver}
+        exclusive
+        onChange={(event, newSolver) => {
+          console.log(newSolver);
+          setSolver(newSolver);
+        }}
+        size="medium"
+      >
+        <ToggleButton value="bfs">BFS</ToggleButton>
+        <ToggleButton value="dfs">DFS</ToggleButton>
+        <ToggleButton value="astar">A*</ToggleButton>
+      </ToggleButtonGroup>
     </Layout>
   );
 };
