@@ -22,7 +22,8 @@ const Calculator: NextPage = () => {
   }, [val1, val2]);
 
   return (
-    <Layout>
+    <Layout pagename="Simple Calculator">
+      <h1>Simple Calculator</h1>
       <input
         type="number"
         value={val1}
