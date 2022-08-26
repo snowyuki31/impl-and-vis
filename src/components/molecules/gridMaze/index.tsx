@@ -37,17 +37,13 @@ function buildMaze(grid: Grid, width: number, height: number) {
   return elements;
 }
 
-function visitCell(maze: JSX.Element[], index: number) {
-  var states = ["open", "visited"];
-  maze[index] = <Cell states={states} value={index}></Cell>;
-}
-
 const Maze: React.FC<Props> = (props) => {
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
   const [minDist, setMinDist] = useState(-1);
   const [iter, setIter] = useState(-1);
   const [steps, setSteps] = useState<Uint32Array | null>();
+  const [path, setPath] = useState<Uint32Array | null>();
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
@@ -58,6 +54,7 @@ const Maze: React.FC<Props> = (props) => {
       setMinDist(-1);
       setIter(-1);
       setSteps(null);
+      setPath(null);
       setIdx(0);
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
     });
@@ -66,25 +63,28 @@ const Maze: React.FC<Props> = (props) => {
   useEffect(() => {
     setIdx(0);
     setMinDist(-1);
-    setIter(-1);
+    setIter(0);
 
     if (grid && props.solver === "bfs") {
       grid.initialize_values();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       const result = grid.bfs();
       setSteps(result);
+      setPath(grid.trace_back());
       console.log("BFS Done!");
     } else if (grid && props.solver === "dfs") {
       grid.initialize_values();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       const result = grid.dfs();
       setSteps(result);
+      setPath(grid.trace_back());
       console.log("DFS Done!");
     } else if (grid && props.solver === "astar") {
       grid.initialize_values();
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
       const result = grid.astar();
       setSteps(result);
+      setPath(grid.trace_back());
       console.log("A* Done!");
     }
   }, [props.solver]);
@@ -97,9 +97,21 @@ const Maze: React.FC<Props> = (props) => {
       );
       setMaze(newMaze);
       setIdx(idx + 1);
-    } else if (grid && steps && idx >= steps.length) {
-      setMinDist(grid.get_goal_value());
-      setIter(steps.length + 2);
+      setIter(iter + 1);
+    } else if (
+      steps &&
+      path &&
+      maze &&
+      idx >= steps.length &&
+      idx < steps.length + path.length
+    ) {
+      setMinDist(2 + idx - steps.length);
+      var newMaze = [...maze];
+      newMaze[path[idx - steps.length]] = (
+        <Cell states={["open", "on_path"]} value={steps[idx]}></Cell>
+      );
+      setMaze(newMaze);
+      setIdx(idx + 1);
     }
   });
 

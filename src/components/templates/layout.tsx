@@ -1,5 +1,6 @@
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
+import Head from "next/head";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -19,11 +20,21 @@ const theme = createTheme({
   },
 });
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({
+  pagename,
+  children,
+}: {
+  pagename: string;
+  children: React.ReactNode;
+}) => {
+  const title = (pagename !== "" ? pagename + " | " : "") + "impl-and-vis";
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
+        <Head>
+          <title>{title}</title>
+        </Head>
         <Box
           sx={{
             marginTop: 8,

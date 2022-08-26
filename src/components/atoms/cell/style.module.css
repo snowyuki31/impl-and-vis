@@ -24,15 +24,19 @@
 }
 
 .start {
-    background-color: cadetblue;
+    background-color: #C84B31;
 }
 
 .goal {
-    background-color: khaki;
+    background-color: #2D4263;
 }
 
 .visited {
-    background-color: bisque;
+    background-color: #f2d2cb;
+}
+
+.on_path {
+    background-color: #ced8e9;
 }
 
 /* .top {

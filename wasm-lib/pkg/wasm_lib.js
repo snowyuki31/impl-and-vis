@@ -222,8 +222,8 @@ export class Grid {
     * @param {number} y1
     * @returns {number}
     */
-    calc_euclidean_distance(x0, y0, x1, y1) {
-        const ret = wasm.grid_calc_euclidean_distance(this.ptr, x0, y0, x1, y1);
+    calc_squared_euclidean_distance(x0, y0, x1, y1) {
+        const ret = wasm.grid_calc_squared_euclidean_distance(this.ptr, x0, y0, x1, y1);
         return ret;
     }
     /**
@@ -307,6 +307,22 @@ export class Grid {
     get_goal_value() {
         const ret = wasm.grid_get_goal_value(this.ptr);
         return ret;
+    }
+    /**
+    * @returns {Uint32Array}
+    */
+    trace_back() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.grid_trace_back(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
 }
 /**

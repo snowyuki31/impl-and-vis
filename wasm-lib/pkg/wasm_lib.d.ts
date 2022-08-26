@@ -59,7 +59,7 @@ export class Grid {
 * @param {number} y1
 * @returns {number}
 */
-  calc_euclidean_distance(x0: number, y0: number, x1: number, y1: number): number;
+  calc_squared_euclidean_distance(x0: number, y0: number, x1: number, y1: number): number;
 /**
 * @param {number} x0
 * @param {number} y0
@@ -112,6 +112,10 @@ export class Grid {
 * @returns {number}
 */
   get_goal_value(): number;
+/**
+* @returns {Uint32Array}
+*/
+  trace_back(): Uint32Array;
 }
 /**
 */
@@ -153,7 +157,7 @@ export interface InitOutput {
   readonly grid_dfs: (a: number, b: number) => void;
   readonly grid_astar: (a: number, b: number) => void;
   readonly grid_calc_heuristics: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
-  readonly grid_calc_euclidean_distance: (a: number, b: number, c: number, d: number, e: number) => number;
+  readonly grid_calc_squared_euclidean_distance: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly grid_calc_manhattan_distance: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly grid_check_inside: (a: number, b: number, c: number) => number;
   readonly grid_get_index: (a: number, b: number, c: number) => number;
@@ -164,6 +168,7 @@ export interface InitOutput {
   readonly grid_get: (a: number, b: number, c: number) => number;
   readonly grid_get_value: (a: number, b: number, c: number) => number;
   readonly grid_get_goal_value: (a: number) => number;
+  readonly grid_trace_back: (a: number, b: number) => void;
   readonly __wbg_xorshift_free: (a: number) => void;
   readonly xorshift_new: () => number;
   readonly xorshift_with_seed: (a: number, b: number) => number;

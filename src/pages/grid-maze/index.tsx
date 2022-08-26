@@ -14,7 +14,7 @@ const GridMaze: NextPage = () => {
   const [solver, setSolver] = useState("None");
 
   return (
-    <Layout>
+    <Layout pagename="Grid Maze">
       <h1>Grid Maze</h1>
       <TextField
         type="number"

@@ -330,4 +330,32 @@ impl Grid {
     pub fn get_goal_value(&self) -> i32 {
         self.values[self.get_index(self.goal.0, self.goal.1)]
     }
+
+    pub fn trace_back(&self) -> Vec<usize> {
+        let (mut x, mut y) = self.goal;
+        let mut back_path = Vec::new();
+
+        while (x, y) != self.start {
+            let cid = self.get_index(x, y);
+            if (x, y) != self.goal {
+                back_path.push(self.get_index(x, y));
+            }
+
+            for i in 0..4 {
+                let (dx, dy) = DIJ[i];
+                let (nx, ny) = (x.wrapping_add(dx), y.wrapping_add(dy));
+                let nid = self.get_index(nx, ny);
+
+                if self.check_inside(nx, ny)
+                    && self.cells[nid] != GridCell::Close
+                    && self.values[nid] == self.values[cid] - 1
+                {
+                    (x, y) = (nx, ny);
+                    break;
+                }
+            }
+        }
+
+        back_path
+    }
 }
