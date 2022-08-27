@@ -123,8 +123,6 @@ const Maze: React.FC<Props> = (props) => {
     grid ? (35 * 15) / grid.width() : 15
   );
 
-  console.log(grid?.width());
-
   return (
     <div className={styles.container}>
       <div className={styles.maze}>{maze}</div>
