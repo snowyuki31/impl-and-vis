@@ -13,7 +13,8 @@ const Cell: React.FC<Props> = (props) => {
   });
 
   const divStyle = {
-    width: "calc(100% / " + props.width + ")",
+    width: props.width < 0 ? "10px" : "calc(100% / " + props.width + ")",
+    height: props.width < 0 ? "10px" : "",
   };
 
   return <div className={className} style={divStyle}></div>;

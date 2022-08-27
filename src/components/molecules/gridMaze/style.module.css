@@ -3,19 +3,9 @@
     flex-wrap: wrap;
 }
 
-
-.legend {
-    display: flex;
-    justify-content: space-evenly;
-}
-
 .result {
     display: flex;
     flex-flow: column;
     align-items: center;
     padding-top: 10px;
-}
-
-.container {
-    width: 50%;
 }

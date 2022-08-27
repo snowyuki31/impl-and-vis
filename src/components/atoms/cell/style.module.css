@@ -1,16 +1,7 @@
-/* .cell {
-    width: calc(100% / 35);
-} */
-
 .cell::before {
     content: "";
     padding-top: 100%;
     display: block;
-}
-
-.legend {
-    width: 10px;
-    float: left;
 }
 
 .open {

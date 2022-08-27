@@ -30,7 +30,7 @@ const Layout = ({
   const title = (pagename !== "" ? pagename + " | " : "") + "Impl-and-vis";
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="lg">
+      <Container component="main" maxWidth="md">
         <CssBaseline />
         <Head>
           <title>{title}</title>

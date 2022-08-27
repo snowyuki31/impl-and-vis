@@ -2,6 +2,8 @@ import Cell from "../../atoms/cell";
 import init, { Grid, GridCell } from "wasm-lib";
 import { useState, useEffect, useRef } from "react";
 import styles from "./style.module.css";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 
 type Props = {
   width: number;
@@ -124,23 +126,27 @@ const Maze: React.FC<Props> = (props) => {
   );
 
   return (
-    <div className={styles.container}>
+    <Box
+      sx={{
+        width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
+      }}
+    >
       <div className={styles.maze}>{maze}</div>
-      <div className={styles.legend}>
-        <div>
+      <Stack direction="row" justifyContent="center" spacing={5} sx={{ mt: 1 }}>
+        <Stack direction="row" justifyContent="center">
+          <Cell states={["start"]} value={-1} width={-1} />
           Start
-          <Cell states={["start", "legend"]} value={-1} width={3} />
-        </div>
-        <div>
+        </Stack>
+        <Stack direction="row" justifyContent="center">
+          <Cell states={["goal"]} value={-1} width={-1} />
           Goal
-          <Cell states={["goal", "legend"]} value={-1} width={3} />
-        </div>
-      </div>
+        </Stack>
+      </Stack>
       <div className={styles.result}>
         <div>Distance: {minDist != -1 ? minDist : "-"}</div>
         <div>Visited Cells: {iter != -1 ? iter : "-"}</div>
       </div>
-    </div>
+    </Box>
   );
 };
 
