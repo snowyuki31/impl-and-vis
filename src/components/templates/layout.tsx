@@ -37,11 +37,18 @@ const Layout = ({
         </Head>
         <Box
           sx={{
-            marginTop: 8,
-            marginBottom: 8,
+            paddingTop: {
+              xs: 4,
+              md: 8,
+            },
+            paddingBottom: {
+              xs: 4,
+              md: 8,
+            },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            height: "100vh",
           }}
         >
           {children}

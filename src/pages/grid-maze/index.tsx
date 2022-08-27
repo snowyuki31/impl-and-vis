@@ -28,8 +28,8 @@ const GridMaze: NextPage = () => {
       <Maze width={width} height={height} seed={seed} solver={solver}></Maze>
 
       <Container>
-        <Grid container justifyContent="center" columnSpacing={2}>
-          <Grid xs={6} sm={4}>
+        <Grid container justifyContent="center" columnSpacing={1}>
+          <Grid xs={8} sm={4}>
             <Box>
               <h3 style={{ textAlign: "center" }}>Generator</h3>
               <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -47,7 +47,7 @@ const GridMaze: NextPage = () => {
                   ></TextField>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Stack direction="column" spacing={1}>
+                  <Stack direction="column">
                     <ToggleButtonGroup
                       color="primary"
                       value={width}
