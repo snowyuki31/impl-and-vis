@@ -1,6 +1,6 @@
-.cell {
+/* .cell {
     width: calc(100% / 35);
-}
+} */
 
 .cell::before {
     content: "";

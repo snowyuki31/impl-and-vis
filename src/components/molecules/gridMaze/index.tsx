@@ -90,35 +90,40 @@ const Maze: React.FC<Props> = (props) => {
     }
   }, [props.solver]);
 
-  useInterval(() => {
-    if (grid && steps && maze && path) {
-      if (idx < steps.length) {
-        var newMaze = [...maze];
-        newMaze[steps[idx]] = (
-          <Cell
-            states={["open", "visited"]}
-            value={steps[idx]}
-            width={grid.width()}
-          ></Cell>
-        );
-        setMaze(newMaze);
-        setIdx(idx + 1);
-        setIter(iter + 1);
-      } else if (idx >= steps.length && idx < steps.length + path.length) {
-        setMinDist(2 + idx - steps.length);
-        var newMaze = [...maze];
-        newMaze[path[idx - steps.length]] = (
-          <Cell
-            states={["open", "on_path"]}
-            value={steps[idx]}
-            width={grid.width()}
-          ></Cell>
-        );
-        setMaze(newMaze);
-        setIdx(idx + 1);
+  useInterval(
+    () => {
+      if (grid && steps && maze && path) {
+        if (idx < steps.length) {
+          var newMaze = [...maze];
+          newMaze[steps[idx]] = (
+            <Cell
+              states={["open", "visited"]}
+              value={steps[idx]}
+              width={grid.width()}
+            ></Cell>
+          );
+          setMaze(newMaze);
+          setIdx(idx + 1);
+          setIter(iter + 1);
+        } else if (idx >= steps.length && idx < steps.length + path.length) {
+          setMinDist(2 + idx - steps.length);
+          var newMaze = [...maze];
+          newMaze[path[idx - steps.length]] = (
+            <Cell
+              states={["open", "on_path"]}
+              value={steps[idx]}
+              width={grid.width()}
+            ></Cell>
+          );
+          setMaze(newMaze);
+          setIdx(idx + 1);
+        }
       }
-    }
-  });
+    },
+    grid ? (35 * 15) / grid.width() : 15
+  );
+
+  console.log(grid?.width());
 
   return (
     <div className={styles.container}>
@@ -126,11 +131,11 @@ const Maze: React.FC<Props> = (props) => {
       <div className={styles.legend}>
         <div>
           Start
-          <Cell states={["start", "legend"]} value={-1} width={35} />
+          <Cell states={["start", "legend"]} value={-1} width={3} />
         </div>
         <div>
           Goal
-          <Cell states={["goal", "legend"]} value={-1} width={35} />
+          <Cell states={["goal", "legend"]} value={-1} width={3} />
         </div>
       </div>
       <div className={styles.result}>
@@ -143,7 +148,7 @@ const Maze: React.FC<Props> = (props) => {
 
 export default Maze;
 
-export const useInterval = (callback: () => void) => {
+export const useInterval = (callback: () => void, interval: number) => {
   const callbackRef = useRef<() => void>(callback);
   useEffect(() => {
     callbackRef.current = callback;
@@ -153,7 +158,7 @@ export const useInterval = (callback: () => void) => {
     const tick = () => {
       callbackRef.current();
     };
-    const id = setInterval(tick, 15);
+    const id = setInterval(tick, interval);
     return () => {
       clearInterval(id);
     };

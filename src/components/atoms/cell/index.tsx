@@ -12,10 +12,11 @@ const Cell: React.FC<Props> = (props) => {
     className += ` ${styles[state]}`;
   });
 
-  // var width = "calc(100% / " + props.width + ")";
-  // console.log(width);
+  const divStyle = {
+    width: "calc(100% / " + props.width + ")",
+  };
 
-  return <div className={className}></div>;
+  return <div className={className} style={divStyle}></div>;
 };
 
 export default Cell;
