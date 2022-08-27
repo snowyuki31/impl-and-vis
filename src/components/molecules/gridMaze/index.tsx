@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./style.module.css";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
   width: number;
@@ -44,7 +43,7 @@ function buildMaze(grid: Grid, width: number, height: number) {
 
 const Maze: React.FC<Props> = (props) => {
   const [grid, setGrid] = useState<Grid>();
-  const [maze, setMaze] = useState<JSX.Element[]>([<CircularProgress />]);
+  const [maze, setMaze] = useState<JSX.Element[]>();
   const [minDist, setMinDist] = useState(-1);
   const [iter, setIter] = useState(-1);
   const [steps, setSteps] = useState<Uint32Array | null>();
