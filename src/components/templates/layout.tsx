@@ -38,11 +38,11 @@ const Layout = ({
         <Box
           sx={{
             paddingTop: {
-              xs: 4,
+              xs: 0,
               md: 8,
             },
             paddingBottom: {
-              xs: 4,
+              xs: 0,
               md: 8,
             },
             display: "flex",
