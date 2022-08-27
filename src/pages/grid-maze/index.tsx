@@ -63,7 +63,7 @@ const GridMaze: NextPage = () => {
                     >
                       <ToggleButton value={21}>Small</ToggleButton>
                       <ToggleButton value={35}>Medium</ToggleButton>
-                      <ToggleButton value={59}>Large</ToggleButton>
+                      <ToggleButton value={61}>Large</ToggleButton>
                     </ToggleButtonGroup>
                   </Stack>
                 </AccordionDetails>

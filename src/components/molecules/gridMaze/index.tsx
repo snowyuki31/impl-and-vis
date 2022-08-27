@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./style.module.css";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
   width: number;
@@ -43,7 +44,7 @@ function buildMaze(grid: Grid, width: number, height: number) {
 
 const Maze: React.FC<Props> = (props) => {
   const [grid, setGrid] = useState<Grid>();
-  const [maze, setMaze] = useState<JSX.Element[]>();
+  const [maze, setMaze] = useState<JSX.Element[]>([<CircularProgress />]);
   const [minDist, setMinDist] = useState(-1);
   const [iter, setIter] = useState(-1);
   const [steps, setSteps] = useState<Uint32Array | null>();
@@ -131,7 +132,12 @@ const Maze: React.FC<Props> = (props) => {
         width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
       }}
     >
-      <div className={styles.maze}>{maze}</div>
+      <Box
+        sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}
+        className={styles.maze}
+      >
+        {maze}
+      </Box>
       <Stack direction="row" justifyContent="center" spacing={5} sx={{ mt: 1 }}>
         <Stack direction="row" justifyContent="center">
           <Cell states={["start"]} value={-1} width={-1} />

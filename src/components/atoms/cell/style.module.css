@@ -5,7 +5,7 @@
 }
 
 .open {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);
     color: #121212;
 }
 
@@ -23,11 +23,11 @@
 }
 
 .visited {
-    background-color: #f2d2cb;
+    background-color: #e7a99c;
 }
 
 .on_path {
-    background-color: #ced8e9;
+    background-color: #a5b8d6;
 }
 
 /* .top {
