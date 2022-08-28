@@ -1,14 +1,20 @@
 import Cell from "../../atoms/cell";
 import init, { Grid, GridCell } from "wasm-lib";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import styles from "./style.module.css";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import useInterval from "../../../utils/useInterval";
 
-type Props = {
-  size: number;
+export type MazeState = {
   seed: number;
+  size: number;
   solver: string;
+};
+
+export type ResultState = {
+  distance: number;
+  visited: number;
 };
 
 function buildMaze(grid: Grid) {
@@ -41,99 +47,93 @@ function buildMaze(grid: Grid) {
   return elements;
 }
 
-const Maze: React.FC<Props> = (props) => {
+const Maze = ({
+  state,
+  result,
+  setResult,
+}: {
+  state: MazeState;
+  result: ResultState;
+  setResult: Dispatch<SetStateAction<ResultState>>;
+}) => {
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
   const [steps, setSteps] = useState<Uint32Array | null>();
   const [path, setPath] = useState<Uint32Array | null>();
-
-  const [minDist, setMinDist] = useState(-1);
-  const [iter, setIter] = useState(-1);
-  const [idx, setIdx] = useState(0);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setMinDist(-1);
-    setIter(-1);
-    setSteps(null);
     setPath(null);
-    setIdx(0);
+    setSteps(null);
+    setIndex(0);
 
     init().then(() => {
-      const grid = Grid.new(props.size, props.size, props.seed);
+      const grid = Grid.new(state.size, state.size, state.seed);
       grid.build();
       setGrid(grid);
       setMaze(buildMaze(grid));
     });
-  }, [props.seed, props.size]);
+  }, [state.seed, state.size]);
 
   useEffect(() => {
-    setIdx(0);
-    setMinDist(-1);
-    setIter(-1);
+    setIndex(0);
 
     if (grid) {
       grid.initialize_values();
       setMaze(buildMaze(grid));
-      setIter(1);
 
-      if (props.solver === "bfs") {
-        const result = grid.bfs();
-        setSteps(result);
+      var ret = null;
+
+      if (state.solver === "bfs") {
+        ret = grid.bfs();
+      } else if (state.solver === "dfs") {
+        ret = grid.dfs();
+      } else if (state.solver === "astar") {
+        ret = grid.astar();
+      }
+
+      if (ret !== null) {
+        setResult({ ...result, visited: 1 });
+        setSteps(ret);
         setPath(grid.trace_back());
-        console.log("BFS Launched...");
-      } else if (props.solver === "dfs") {
-        const result = grid.dfs();
-        setSteps(result);
-        setPath(grid.trace_back());
-        console.log("DFS Launched...");
-      } else if (props.solver === "astar") {
-        const result = grid.astar();
-        setSteps(result);
-        setPath(grid.trace_back());
-        console.log("A* Launched...");
       }
     }
-  }, [props.solver]);
+  }, [state.solver]);
 
-  useInterval(
-    () => {
-      if (grid && steps && maze && path) {
-        if (idx < steps.length) {
-          var newMaze = [...maze];
-          newMaze[steps[idx]] = (
-            <Cell
-              states={["open", "visited"]}
-              value={steps[idx]}
-              width={grid.width()}
-            ></Cell>
-          );
-          setMaze(newMaze);
-          setIdx(idx + 1);
-          setIter(iter + 1);
-        } else if (idx >= steps.length && idx < steps.length + path.length) {
-          setMinDist(2 + idx - steps.length);
-          var newMaze = [...maze];
-          newMaze[path[idx - steps.length]] = (
-            <Cell
-              states={["open", "on_path"]}
-              value={steps[idx]}
-              width={grid.width()}
-            ></Cell>
-          );
-          setMaze(newMaze);
-          setIdx(idx + 1);
-        }
+  useInterval(() => {
+    if (grid && steps && maze && path) {
+      if (index < steps.length) {
+        var newMaze = [...maze];
+        newMaze[steps[index]] = (
+          <Cell
+            states={["open", "visited"]}
+            value={steps[index]}
+            width={grid.width()}
+          ></Cell>
+        );
+
+        setMaze(newMaze);
+        setIndex(index + 1);
+        setResult({ ...result, visited: result.visited + 1 });
+      } else if (index >= steps.length && index < steps.length + path.length) {
+        var newMaze = [...maze];
+        newMaze[path[index - steps.length]] = (
+          <Cell
+            states={["open", "on_path"]}
+            value={steps[index]}
+            width={grid.width()}
+          ></Cell>
+        );
+
+        setMaze(newMaze);
+        setIndex(index + 1);
+        setResult({ ...result, distance: 2 + index - steps.length });
       }
-    },
-    grid ? (35 * 15) / grid.width() : 15
-  );
+    }
+  }, (35 * 15) / state.size);
 
   return (
-    <Box
-      sx={{
-        width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
-      }}
-    >
+    <>
       <Box
         sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}
         className={styles.maze}
@@ -150,29 +150,8 @@ const Maze: React.FC<Props> = (props) => {
           Goal
         </Stack>
       </Stack>
-      <div className={styles.result}>
-        <div>Distance: {minDist != -1 ? minDist : "-"}</div>
-        <div>Visited Cells: {iter != -1 ? iter : "-"}</div>
-      </div>
-    </Box>
+    </>
   );
 };
 
 export default Maze;
-
-export const useInterval = (callback: () => void, interval: number) => {
-  const callbackRef = useRef<() => void>(callback);
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    const tick = () => {
-      callbackRef.current();
-    };
-    const id = setInterval(tick, interval);
-    return () => {
-      clearInterval(id);
-    };
-  });
-};

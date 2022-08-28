@@ -2,10 +2,3 @@
     display: flex;
     flex-wrap: wrap;
 }
-
-.result {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    padding-top: 10px;
-}

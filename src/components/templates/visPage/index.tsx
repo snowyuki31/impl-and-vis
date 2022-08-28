@@ -7,18 +7,20 @@ import React from "react";
 const VisPage = ({
   pagename,
   field,
+  resultArea,
   generator,
   solver,
 }: {
   pagename: string;
   field: React.ReactNode;
+  resultArea: React.ReactNode;
   generator: React.ReactNode;
   solver: React.ReactNode;
 }) => {
   return (
     <Layout pagename={pagename}>
       <h1>{pagename}</h1>
-      {field}
+      <FieldTemplate field={field} resultArea={resultArea} />
       <Container>
         <Grid container justifyContent="center" columnSpacing={1}>
           <Grid xs={8} sm={4} item>
@@ -34,6 +36,27 @@ const VisPage = ({
 };
 
 export default VisPage;
+
+const FieldTemplate = ({
+  field,
+  resultArea,
+}: {
+  field: React.ReactNode;
+  resultArea: React.ReactNode;
+}) => {
+  return (
+    <Box
+      sx={{
+        width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
+      }}
+    >
+      {field}
+      <Box sx={{ pt: 1 }} style={{ textAlign: "center" }}>
+        {resultArea}
+      </Box>
+    </Box>
+  );
+};
 
 const GeneratorTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
