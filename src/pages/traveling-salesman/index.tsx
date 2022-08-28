@@ -8,6 +8,8 @@ import TravelingSalesman, {
 } from "../../components/modules/travelingSalesman";
 
 import { PlotAreaProps } from "../../components/blocks/plotArea";
+import { TravelingSalesmanSolver } from "../../components/modules/travelingSalesman";
+
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -17,26 +19,20 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
-type TravelingSalesmanProps = {
-  plots: PlotAreaProps;
-  solver: SolverProps;
-  result: ResultState;
-};
-
 const TravelingSalesmanPage: NextPage = () => {
-  const useProps = useState<TravelingSalesmanProps>({
-    plots: {
+  const useProps: TravelingSalesmanSolver = {
+    usePlots: useState<PlotAreaProps>({
       seed: Math.floor(Math.random() * 100),
       size: 35,
       numPlots: 35,
-    },
-    solver: {
+    }),
+    useSolver: useState<SolverProps>({
       solver: "None",
-    },
-    result: {
+    }),
+    useResult: useState<ResultState>({
       minCost: -1,
-    },
-  });
+    }),
+  };
 
   return (
     <VisPage
@@ -55,24 +51,17 @@ export const Field = () => {
   return <TravelingSalesman />;
 };
 
-export const ResultArea = (
-  useProps: [TravelingSalesmanProps, Dispatch<TravelingSalesmanProps>]
-) => {
-  const [props, setProps] = useProps;
+export const ResultArea = (useProps: TravelingSalesmanSolver) => {
+  const [result, setResult] = useProps.useResult;
   return (
     <>
-      <div>
-        Minimum Cost:{" "}
-        {props.result.minCost != -1 ? props.result.minCost : "inf"}
-      </div>
+      <div>Minimum Cost: {result.minCost != -1 ? result.minCost : "inf"}</div>
     </>
   );
 };
 
-export const Generator = (
-  useProps: [TravelingSalesmanProps, Dispatch<TravelingSalesmanProps>]
-) => {
-  const [props, setProps] = useProps;
+export const Generator = (useProps: TravelingSalesmanSolver) => {
+  const [plots, setPlots] = useProps.usePlots;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -82,15 +71,9 @@ export const Generator = (
             label="seed"
             variant="standard"
             size="small"
-            value={props.plots.seed}
+            value={plots.seed}
             onChange={(e) => {
-              setProps({
-                ...props,
-                plots: {
-                  ...props.plots,
-                  seed: Number(e.target.value),
-                },
-              });
+              setPlots({ ...plots, seed: Number(e.target.value) });
             }}
           ></TextField>
         </AccordionSummary>
@@ -99,13 +82,10 @@ export const Generator = (
             <ToggleButtonGroup
               color="primary"
               exclusive
-              value={props.plots.numPlots}
+              value={plots.numPlots}
               onChange={(_, newNumPlots) => {
                 if (newNumPlots !== null) {
-                  setProps({
-                    ...props,
-                    plots: { ...props.plots, numPlots: newNumPlots },
-                  });
+                  setPlots({ ...plots, numPlots: newNumPlots });
                 }
               }}
               size="small"
@@ -121,21 +101,18 @@ export const Generator = (
   );
 };
 
-export const Solver = (
-  useProps: [TravelingSalesmanProps, Dispatch<TravelingSalesmanProps>]
-) => {
-  const [props, setProps] = useProps;
+export const Solver = (useProps: TravelingSalesmanSolver) => {
+  const [plots, setPlots] = useProps.usePlots;
+  const [solver, setSolver] = useProps.useSolver;
+  const [result, setResult] = useProps.useResult;
   return (
     <ToggleButtonGroup
       color="primary"
-      value={props.solver.solver}
+      value={solver.solver}
       exclusive
       onChange={(_, newSolver) => {
         if (newSolver !== null) {
-          setProps({
-            ...props,
-            solver: { ...props.solver, solver: newSolver },
-          });
+          setSolver({ ...solver, solver: newSolver });
         }
       }}
       size="medium"
