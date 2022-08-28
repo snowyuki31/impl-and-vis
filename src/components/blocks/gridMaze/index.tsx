@@ -13,7 +13,7 @@ export type MazeState = {
 };
 
 export type ResultState = {
-  distance: number;
+  length: number;
   visited: number;
 };
 
@@ -127,7 +127,7 @@ const Maze = ({
 
         setMaze(newMaze);
         setIndex(index + 1);
-        setResult({ ...result, distance: 2 + index - steps.length });
+        setResult({ ...result, length: 2 + index - steps.length });
       }
     }
   }, (35 * 15) / state.size);

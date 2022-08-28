@@ -21,7 +21,7 @@ const GridMaze: NextPage = () => {
   });
 
   const [result, setResult] = useState<ResultState>({
-    distance: -1,
+    length: -1,
     visited: -1,
   });
 
@@ -53,7 +53,7 @@ export const Field = ({
 export const ResultArea = (result: ResultState) => {
   return (
     <>
-      <div>Distance: {result.distance != -1 ? result.distance : "-"}</div>
+      <div>Path Length: {result.length != -1 ? result.length : "-"}</div>
       <div>Visited Cells: {result.visited != -1 ? result.visited : "-"}</div>
     </>
   );
@@ -82,7 +82,7 @@ export const Generator = (
                 seed: Number(e.target.value),
                 solver: "None",
               });
-              setResult({ ...result, distance: -1, visited: -1 });
+              setResult({ ...result, length: -1, visited: -1 });
             }}
           ></TextField>
         </AccordionSummary>
@@ -95,7 +95,7 @@ export const Generator = (
               onChange={(_, newSize) => {
                 if (newSize !== null) {
                   setState({ ...state, size: newSize, solver: "None" });
-                  setResult({ ...result, distance: -1, visited: -1 });
+                  setResult({ ...result, length: -1, visited: -1 });
                 }
               }}
               size="small"
@@ -125,7 +125,7 @@ export const Solver = (
       onChange={(_, newSolver) => {
         if (newSolver !== null) {
           setState({ ...state, solver: newSolver });
-          setResult({ ...result, distance: -1, visited: -1 });
+          setResult({ ...result, length: -1, visited: -1 });
         }
       }}
       size="medium"
