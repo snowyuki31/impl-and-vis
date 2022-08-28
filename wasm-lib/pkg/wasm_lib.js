@@ -94,10 +94,6 @@ function passStringToWasm0(arg, malloc, realloc) {
     WASM_VECTOR_LEN = offset;
     return ptr;
 }
-
-const u32CvtShim = new Uint32Array(2);
-
-const uint64CvtShim = new BigUint64Array(u32CvtShim.buffer);
 /**
 * @param {number} a
 * @param {number} b
@@ -108,9 +104,73 @@ export function add(a, b) {
     return ret;
 }
 
+const u32CvtShim = new Uint32Array(2);
+
+const uint64CvtShim = new BigUint64Array(u32CvtShim.buffer);
 /**
 */
 export const GridCell = Object.freeze({ Close:0,"0":"Close",Open:1,"1":"Open",Start:2,"2":"Start",Goal:3,"3":"Goal", });
+/**
+*/
+export class Graph {
+
+    static __wrap(ptr) {
+        const obj = Object.create(Graph.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_graph_free(ptr);
+    }
+    /**
+    * @param {number} num_plots
+    * @param {number} seed
+    * @param {number} size
+    * @returns {Graph}
+    */
+    static new(num_plots, seed, size) {
+        const ret = wasm.graph_new(num_plots, seed, size);
+        return Graph.__wrap(ret);
+    }
+    /**
+    */
+    build() {
+        wasm.graph_build(this.ptr);
+    }
+    /**
+    * @returns {Uint32Array}
+    */
+    get_nodes() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.graph_get_nodes(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @returns {number}
+    */
+    seed() {
+        const ret = wasm.graph_seed(this.ptr);
+        return ret >>> 0;
+    }
+}
 /**
 */
 export class Grid {

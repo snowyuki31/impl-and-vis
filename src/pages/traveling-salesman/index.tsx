@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman, {
+  TSPState,
   ResultState,
   SolverProps,
 } from "../../components/modules/travelingSalesman";
 
-import { PlotAreaProps } from "../../components/blocks/plotArea";
 import { TravelingSalesmanSolver } from "../../components/modules/travelingSalesman";
 
 import Accordion from "@mui/material/Accordion";
@@ -21,10 +21,10 @@ import Stack from "@mui/material/Stack";
 
 const TravelingSalesmanPage: NextPage = () => {
   const useProps: TravelingSalesmanSolver = {
-    usePlots: useState<PlotAreaProps>({
+    usePlots: useState<TSPState>({
       seed: Math.floor(Math.random() * 100),
-      size: 35,
-      numPlots: 35,
+      size: 400,
+      numPlots: 10,
     }),
     useSolver: useState<SolverProps>({
       solver: "None",
@@ -36,8 +36,8 @@ const TravelingSalesmanPage: NextPage = () => {
 
   return (
     <VisPage
-      pagename="Traveling Salesman (WIP)"
-      field={<></>}
+      pagename="Traveling Salesman"
+      field={Field(useProps)}
       resultArea={ResultArea(useProps)}
       generator={Generator(useProps)}
       solver={Solver(useProps)}
@@ -47,8 +47,8 @@ const TravelingSalesmanPage: NextPage = () => {
 
 export default TravelingSalesmanPage;
 
-export const Field = () => {
-  return <TravelingSalesman />;
+export const Field = (useProps: TravelingSalesmanSolver) => {
+  return <TravelingSalesman useProps={useProps} />;
 };
 
 export const ResultArea = (useProps: TravelingSalesmanSolver) => {
@@ -62,6 +62,8 @@ export const ResultArea = (useProps: TravelingSalesmanSolver) => {
 
 export const Generator = (useProps: TravelingSalesmanSolver) => {
   const [plots, setPlots] = useProps.usePlots;
+  const [solver, setSolver] = useProps.useSolver;
+  const [result, setResult] = useProps.useResult;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -74,6 +76,7 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
             value={plots.seed}
             onChange={(e) => {
               setPlots({ ...plots, seed: Number(e.target.value) });
+              setSolver({ ...solver, solver: "None" });
             }}
           ></TextField>
         </AccordionSummary>
@@ -86,13 +89,14 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
               onChange={(_, newNumPlots) => {
                 if (newNumPlots !== null) {
                   setPlots({ ...plots, numPlots: newNumPlots });
+                  setSolver({ ...solver, solver: "None" });
                 }
               }}
               size="small"
             >
-              <ToggleButton value={21}>Small</ToggleButton>
-              <ToggleButton value={35}>Medium</ToggleButton>
-              <ToggleButton value={61}>Large</ToggleButton>
+              <ToggleButton value={10}>Small</ToggleButton>
+              <ToggleButton value={50}>Medium</ToggleButton>
+              <ToggleButton value={100}>Large</ToggleButton>
             </ToggleButtonGroup>
           </Stack>
         </AccordionDetails>
@@ -117,7 +121,9 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
       }}
       size="medium"
     >
-      <ToggleButton value="brute-force">Brute Force</ToggleButton>
+      <ToggleButton value="brute-force" disabled={plots.numPlots > 15}>
+        Brute Force
+      </ToggleButton>
     </ToggleButtonGroup>
   );
 };
