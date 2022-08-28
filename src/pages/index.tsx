@@ -14,6 +14,11 @@ const Home: NextPage = () => {
             <a>Grid Maze</a>
           </Link>
         </div>
+        <div>
+          <Link href="/traveling-salesman">
+            <a>Traveling Salesman (WIP)</a>
+          </Link>
+        </div>
         <h1>Samples</h1>
         <div>
           <Link href="/calc">
