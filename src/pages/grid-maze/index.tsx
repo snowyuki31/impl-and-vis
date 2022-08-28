@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import Maze, {
