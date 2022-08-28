@@ -6,17 +6,17 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 type Props = {
-  width: number;
-  height: number;
+  size: number;
   seed: number;
   solver: string;
 };
 
-function buildMaze(grid: Grid, width: number, height: number) {
+function buildMaze(grid: Grid) {
   var elements = [];
+  const size = grid.width();
 
-  for (var i = 0; i < width; i++) {
-    for (var j = 0; j < height; j++) {
+  for (var i = 0; i < size; i++) {
+    for (var j = 0; j < size; j++) {
       var states = [];
       let state = grid.get(i, j);
       if (state === GridCell.Close) {
@@ -34,7 +34,7 @@ function buildMaze(grid: Grid, width: number, height: number) {
       }
 
       elements.push(
-        <Cell states={states} value={i * width + j} width={grid.width()}></Cell>
+        <Cell states={states} value={i * size + j} width={size}></Cell>
       );
     }
   }
@@ -44,10 +44,11 @@ function buildMaze(grid: Grid, width: number, height: number) {
 const Maze: React.FC<Props> = (props) => {
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
-  const [minDist, setMinDist] = useState(-1);
-  const [iter, setIter] = useState(-1);
   const [steps, setSteps] = useState<Uint32Array | null>();
   const [path, setPath] = useState<Uint32Array | null>();
+
+  const [minDist, setMinDist] = useState(-1);
+  const [iter, setIter] = useState(-1);
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
@@ -58,37 +59,38 @@ const Maze: React.FC<Props> = (props) => {
     setIdx(0);
 
     init().then(() => {
-      const grid = Grid.new(props.width, props.height, props.seed);
+      const grid = Grid.new(props.size, props.size, props.seed);
       grid.build();
       setGrid(grid);
-      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
+      setMaze(buildMaze(grid));
     });
-  }, [props.seed, props.width, props.height]);
+  }, [props.seed, props.size]);
 
   useEffect(() => {
     setIdx(0);
     setMinDist(-1);
-    setIter(1);
+    setIter(-1);
 
     if (grid) {
       grid.initialize_values();
-      setMaze(buildMaze(grid, grid?.width(), grid?.height()));
+      setMaze(buildMaze(grid));
+      setIter(1);
 
       if (props.solver === "bfs") {
         const result = grid.bfs();
         setSteps(result);
         setPath(grid.trace_back());
-        console.log("BFS Done!");
+        console.log("BFS Launched...");
       } else if (props.solver === "dfs") {
         const result = grid.dfs();
         setSteps(result);
         setPath(grid.trace_back());
-        console.log("DFS Done!");
+        console.log("DFS Launched...");
       } else if (props.solver === "astar") {
         const result = grid.astar();
         setSteps(result);
         setPath(grid.trace_back());
-        console.log("A* Done!");
+        console.log("A* Launched...");
       }
     }
   }, [props.solver]);
