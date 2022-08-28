@@ -2,7 +2,12 @@ import type { NextPage } from "next";
 import { useState, Dispatch, SetStateAction } from "react";
 
 import VisPage from "../../components/templates/visPage";
-import Maze, { MazeState, ResultState } from "../../components/blocks/gridMaze";
+import Maze, {
+  MazeState,
+  ResultState,
+  SolverProps,
+  GridMazeSolver,
+} from "../../components/blocks/gridMaze";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -14,43 +19,39 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AccordionDetails } from "@mui/material";
 
 const GridMaze: NextPage = () => {
-  const [state, setState] = useState<MazeState>({
-    seed: Math.floor(Math.random() * 100),
-    size: 35,
-    solver: "None",
-  });
-
-  const [result, setResult] = useState<ResultState>({
-    length: -1,
-    visited: -1,
-  });
+  const useProps: GridMazeSolver = {
+    usePlots: useState<MazeState>({
+      seed: Math.floor(Math.random() * 100),
+      size: 35,
+    }),
+    useSolver: useState<SolverProps>({
+      solver: "None",
+    }),
+    useResult: useState<ResultState>({
+      length: -1,
+      visited: -1,
+    }),
+  };
 
   return (
     <VisPage
       pagename="Grid Maze"
-      field={Field({ state, result, setResult })}
-      resultArea={ResultArea(result)}
-      generator={Generator(state, setState, result, setResult)}
-      solver={Solver(state, setState, result, setResult)}
+      field={Field(useProps)}
+      resultArea={ResultArea(useProps)}
+      generator={Generator(useProps)}
+      solver={Solver(useProps)}
     ></VisPage>
   );
 };
 
 export default GridMaze;
 
-export const Field = ({
-  state,
-  result,
-  setResult,
-}: {
-  state: MazeState;
-  result: ResultState;
-  setResult: Dispatch<SetStateAction<ResultState>>;
-}) => {
-  return <Maze state={state} result={result} setResult={setResult}></Maze>;
+export const Field = (useProps: GridMazeSolver) => {
+  return <Maze useProps={useProps}></Maze>;
 };
 
-export const ResultArea = (result: ResultState) => {
+export const ResultArea = (useProps: GridMazeSolver) => {
+  const [result, setResult] = useProps.useResult;
   return (
     <>
       <div>Path Length: {result.length != -1 ? result.length : "-"}</div>
@@ -59,13 +60,10 @@ export const ResultArea = (result: ResultState) => {
   );
 };
 
-export const Generator = (
-  state: MazeState,
-  setState: Dispatch<SetStateAction<MazeState>>,
-  result: ResultState,
-  setResult: Dispatch<SetStateAction<ResultState>>
-) => {
-  const { seed, size } = state;
+export const Generator = (useProps: GridMazeSolver) => {
+  const [plots, setPlots] = useProps.usePlots;
+  const [solver, setSolver] = useProps.useSolver;
+  const [result, setResult] = useProps.useResult;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -75,13 +73,13 @@ export const Generator = (
             label="seed"
             variant="standard"
             size="small"
-            value={seed}
+            value={plots.seed}
             onChange={(e) => {
-              setState({
-                ...state,
+              setPlots({
+                ...plots,
                 seed: Number(e.target.value),
-                solver: "None",
               });
+              setSolver({ ...solver, solver: "None" });
               setResult({ ...result, length: -1, visited: -1 });
             }}
           ></TextField>
@@ -90,11 +88,12 @@ export const Generator = (
           <Stack direction="column">
             <ToggleButtonGroup
               color="primary"
-              value={size}
+              value={plots.size}
               exclusive
               onChange={(_, newSize) => {
                 if (newSize !== null) {
-                  setState({ ...state, size: newSize, solver: "None" });
+                  setPlots({ ...plots, size: newSize });
+                  setSolver({ ...solver, solver: "None" });
                   setResult({ ...result, length: -1, visited: -1 });
                 }
               }}
@@ -111,20 +110,17 @@ export const Generator = (
   );
 };
 
-export const Solver = (
-  state: MazeState,
-  setState: Dispatch<SetStateAction<MazeState>>,
-  result: ResultState,
-  setResult: Dispatch<SetStateAction<ResultState>>
-) => {
+export const Solver = (useProps: GridMazeSolver) => {
+  const [solver, setSolver] = useProps.useSolver;
+  const [result, setResult] = useProps.useResult;
   return (
     <ToggleButtonGroup
       color="primary"
-      value={state.solver}
+      value={solver.solver}
       exclusive
       onChange={(_, newSolver) => {
         if (newSolver !== null) {
-          setState({ ...state, solver: newSolver });
+          setSolver({ ...solver, solver: newSolver });
           setResult({ ...result, length: -1, visited: -1 });
         }
       }}

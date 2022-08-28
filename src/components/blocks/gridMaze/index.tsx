@@ -9,12 +9,21 @@ import useInterval from "../../../utils/useInterval";
 export type MazeState = {
   seed: number;
   size: number;
+};
+
+export type SolverProps = {
   solver: string;
 };
 
 export type ResultState = {
   length: number;
   visited: number;
+};
+
+export type GridMazeSolver = {
+  usePlots: [MazeState, Dispatch<SetStateAction<MazeState>>];
+  useSolver: [SolverProps, Dispatch<SetStateAction<SolverProps>>];
+  useResult: [ResultState, Dispatch<SetStateAction<ResultState>>];
 };
 
 function buildMaze(grid: Grid) {
@@ -47,15 +56,11 @@ function buildMaze(grid: Grid) {
   return elements;
 }
 
-const Maze = ({
-  state,
-  result,
-  setResult,
-}: {
-  state: MazeState;
-  result: ResultState;
-  setResult: Dispatch<SetStateAction<ResultState>>;
-}) => {
+const Maze = ({ useProps }: { useProps: GridMazeSolver }) => {
+  const [plots, setPlots] = useProps.usePlots;
+  const [solver, setSolver] = useProps.useSolver;
+  const [result, setResult] = useProps.useResult;
+
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
   const [steps, setSteps] = useState<Uint32Array | null>();
@@ -68,12 +73,12 @@ const Maze = ({
     setIndex(0);
 
     init().then(() => {
-      const grid = Grid.new(state.size, state.size, state.seed);
+      const grid = Grid.new(plots.size, plots.size, plots.seed);
       grid.build();
       setGrid(grid);
       setMaze(buildMaze(grid));
     });
-  }, [state.seed, state.size]);
+  }, [plots.seed, plots.size]);
 
   useEffect(() => {
     setIndex(0);
@@ -84,11 +89,11 @@ const Maze = ({
 
       var ret = null;
 
-      if (state.solver === "bfs") {
+      if (solver.solver === "bfs") {
         ret = grid.bfs();
-      } else if (state.solver === "dfs") {
+      } else if (solver.solver === "dfs") {
         ret = grid.dfs();
-      } else if (state.solver === "astar") {
+      } else if (solver.solver === "astar") {
         ret = grid.astar();
       }
 
@@ -98,7 +103,7 @@ const Maze = ({
         setPath(grid.trace_back());
       }
     }
-  }, [state.solver]);
+  }, [solver.solver]);
 
   useInterval(() => {
     if (grid && steps && maze && path) {
@@ -130,7 +135,7 @@ const Maze = ({
         setResult({ ...result, length: 2 + index - steps.length });
       }
     }
-  }, (35 * 15) / state.size);
+  }, (35 * 15) / plots.size);
 
   return (
     <>
