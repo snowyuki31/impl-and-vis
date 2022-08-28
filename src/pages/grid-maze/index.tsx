@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useState, Dispatch, SetStateAction } from "react";
 import Layout from "../../components/templates/layout";
-import Maze from "../../components/molecules/gridMaze";
+import Maze from "../../components/blocks/gridMaze";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";

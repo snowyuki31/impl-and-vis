@@ -51,15 +51,16 @@ const Maze: React.FC<Props> = (props) => {
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
+    setMinDist(-1);
+    setIter(-1);
+    setSteps(null);
+    setPath(null);
+    setIdx(0);
+
     init().then(() => {
       const grid = Grid.new(props.width, props.height, props.seed);
       grid.build();
       setGrid(grid);
-      setMinDist(-1);
-      setIter(-1);
-      setSteps(null);
-      setPath(null);
-      setIdx(0);
       setMaze(buildMaze(grid, grid?.width(), grid?.height()));
     });
   }, [props.seed, props.width, props.height]);
