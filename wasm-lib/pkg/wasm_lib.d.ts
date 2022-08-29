@@ -33,9 +33,21 @@ export class Graph {
 */
   get_nodes(): Uint32Array;
 /**
+* @returns {Float64Array}
+*/
+  get_costs(): Float64Array;
+/**
 * @returns {number}
 */
   seed(): number;
+/**
+* @returns {Uint32Array}
+*/
+  solve_bf(): Uint32Array;
+/**
+* @returns {Uint32Array}
+*/
+  solve_dp(): Uint32Array;
 }
 /**
 */
@@ -192,18 +204,21 @@ export interface InitOutput {
   readonly grid_get_value: (a: number, b: number, c: number) => number;
   readonly grid_get_goal_value: (a: number) => number;
   readonly grid_trace_back: (a: number, b: number) => void;
-  readonly add: (a: number, b: number) => number;
   readonly __wbg_graph_free: (a: number) => void;
   readonly graph_new: (a: number, b: number, c: number) => number;
   readonly graph_build: (a: number) => void;
   readonly graph_get_nodes: (a: number, b: number) => void;
+  readonly graph_get_costs: (a: number, b: number) => void;
   readonly graph_seed: (a: number) => number;
+  readonly graph_solve_bf: (a: number, b: number) => void;
+  readonly graph_solve_dp: (a: number, b: number) => void;
   readonly __wbg_xorshift_free: (a: number) => void;
   readonly xorshift_new: () => number;
   readonly xorshift_with_seed: (a: number, b: number) => number;
   readonly xorshift_next: (a: number, b: number) => void;
   readonly xorshift_rand: (a: number, b: number, c: number, d: number) => void;
   readonly xorshift_randf: (a: number) => number;
+  readonly add: (a: number, b: number) => number;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
   readonly __wbindgen_malloc: (a: number) => number;

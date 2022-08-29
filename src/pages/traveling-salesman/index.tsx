@@ -19,18 +19,26 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
+const enum InputOptions {
+  numPlotsSmall = 6,
+  numPlotsMedium = 18,
+  numPlotsLarge = 60,
+}
+
 const TravelingSalesmanPage: NextPage = () => {
   const useProps: TravelingSalesmanSolver = {
     usePlots: useState<TSPState>({
       seed: Math.floor(Math.random() * 100),
-      size: 400,
-      numPlots: 10,
+      size: 2000,
+      numPlots: InputOptions.numPlotsSmall,
     }),
     useSolver: useState<SolverProps>({
       solver: "None",
     }),
     useResult: useState<ResultState>({
-      minCost: -1,
+      minCost: 2e9,
+      calculationTime: -1,
+      status: "",
     }),
   };
 
@@ -55,7 +63,10 @@ export const ResultArea = (useProps: TravelingSalesmanSolver) => {
   const [result, setResult] = useProps.useResult;
   return (
     <>
-      <div>Minimum Cost: {result.minCost != -1 ? result.minCost : "inf"}</div>
+      <div>
+        Minimum Cost:{" "}
+        {result.minCost !== 2e9 ? result.minCost.toFixed(2) : "inf"}
+      </div>
     </>
   );
 };
@@ -94,9 +105,15 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
               }}
               size="small"
             >
-              <ToggleButton value={10}>Small</ToggleButton>
-              <ToggleButton value={50}>Medium</ToggleButton>
-              <ToggleButton value={100}>Large</ToggleButton>
+              <ToggleButton value={InputOptions.numPlotsSmall}>
+                Small
+              </ToggleButton>
+              <ToggleButton value={InputOptions.numPlotsMedium}>
+                Medium
+              </ToggleButton>
+              <ToggleButton value={InputOptions.numPlotsLarge}>
+                Large
+              </ToggleButton>
             </ToggleButtonGroup>
           </Stack>
         </AccordionDetails>
@@ -120,9 +137,13 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
         }
       }}
       size="medium"
+      orientation="vertical"
     >
-      <ToggleButton value="brute-force" disabled={plots.numPlots > 15}>
+      <ToggleButton value="brute-force" disabled={plots.numPlots > 10}>
         Brute Force
+      </ToggleButton>
+      <ToggleButton value="bitDP" disabled={plots.numPlots > 20}>
+        Held-Karp (bit DP)
       </ToggleButton>
     </ToggleButtonGroup>
   );

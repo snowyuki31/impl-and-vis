@@ -1,7 +1,6 @@
 mod maze;
 mod tsp;
 mod utils;
-
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

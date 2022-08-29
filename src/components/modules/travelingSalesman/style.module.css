@@ -1,0 +1,23 @@
+.canvas_wrap{
+    width: 400px;
+    height: 400px;
+    max-width: 100%;
+    position: relative;
+    padding: 0;
+    box-sizing: content-box;
+}
+.canvas_wrap:before{
+    content:"";
+    display: block;
+    padding-top: 50%;
+}
+.canvas{
+    position: absolute;
+    left:0;
+    top:0;
+    border: 0;
+    max-width:100%;
+    box-sizing: content-box;
+    padding: 0;
+    margin: 0;
+}
