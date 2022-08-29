@@ -51,6 +51,7 @@ const FieldTemplate = ({
       }}
     >
       {field}
+
       <Box sx={{ pt: 1 }} style={{ textAlign: "center" }}>
         {resultArea}
       </Box>

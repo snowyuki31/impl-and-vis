@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import Box from "@mui/material/Box";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import { CanvasRenderingContext2D } from "canvas";
 
 import init, { Graph } from "wasm-lib";
@@ -98,7 +96,7 @@ const TravelingSalesman = ({
         const [x, y] = get_coords(element);
 
         context.strokeStyle = "white";
-        context.lineWidth = 5;
+        context.lineWidth = 7;
         context.beginPath();
         context.arc(x, y, 30, 0, 360, false);
         context.stroke();
@@ -183,27 +181,24 @@ const TravelingSalesman = ({
   }, 50);
 
   return (
-    <Box>
+    <Box sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}>
       <div className={styles.canvas_wrap}>
         <canvas
           ref={bgCanvasRef}
           width={plots.size}
           height={plots.size}
-          style={{ width: "400px", height: "400px" }}
           className={styles.canvas}
         />
         <canvas
           ref={lineCanvasRef}
           width={plots.size}
           height={plots.size}
-          style={{ width: "400px", height: "400px" }}
           className={styles.canvas}
         />
         <canvas
           ref={resultCanvasRef}
           width={plots.size}
           height={plots.size}
-          style={{ width: "400px", height: "400px" }}
           className={styles.canvas}
         />
       </div>
