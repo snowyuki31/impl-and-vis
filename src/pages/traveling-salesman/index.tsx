@@ -4,7 +4,7 @@ import { useState } from "react";
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman, {
   TSPState,
-  ResultState,
+  InfoState,
   SolverProps,
 } from "../../components/modules/travelingSalesman";
 
@@ -20,9 +20,10 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
 const enum InputOptions {
-  numPlotsSmall = 11,
-  numPlotsMedium = 20,
-  numPlotsLarge = 60,
+  numPlotsSmall = 10,
+  numPlotsMedium = 17,
+  numPlotsLarge = 100,
+  numPlotsExtreme = 1000,
 }
 
 const TravelingSalesmanPage: NextPage = () => {
@@ -35,10 +36,11 @@ const TravelingSalesmanPage: NextPage = () => {
     useSolver: useState<SolverProps>({
       solver: "None",
     }),
-    useResult: useState<ResultState>({
+    useInfo: useState<InfoState>({
       minCost: 2e9,
       calculationTime: -1,
       status: "",
+      optimal: null,
     }),
   };
 
@@ -46,7 +48,7 @@ const TravelingSalesmanPage: NextPage = () => {
     <VisPage
       pagename="Traveling Salesman"
       field={Field(useProps)}
-      resultArea={ResultArea(useProps)}
+      infoArea={InfoArea(useProps)}
       generator={Generator(useProps)}
       solver={Solver(useProps)}
     ></VisPage>
@@ -59,13 +61,17 @@ export const Field = (useProps: TravelingSalesmanSolver) => {
   return <TravelingSalesman useProps={useProps} />;
 };
 
-export const ResultArea = (useProps: TravelingSalesmanSolver) => {
-  const [result, setResult] = useProps.useResult;
+export const InfoArea = (useProps: TravelingSalesmanSolver) => {
+  const [plots, setPlots] = useProps.usePlots;
+  const [result, setResult] = useProps.useInfo;
   return (
     <>
+      <div>n={plots.numPlots}</div>
+      <div>{result.status}</div>
       <div>
         Minimum Cost:{" "}
         {result.minCost !== 2e9 ? result.minCost.toFixed(2) : "inf"}
+        {result.optimal === null ? "" : " (" + result.optimal + ")"}
       </div>
     </>
   );
@@ -74,7 +80,7 @@ export const ResultArea = (useProps: TravelingSalesmanSolver) => {
 export const Generator = (useProps: TravelingSalesmanSolver) => {
   const [plots, setPlots] = useProps.usePlots;
   const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useResult;
+  const [result, setResult] = useProps.useInfo;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -104,6 +110,7 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
                 }
               }}
               size="small"
+              orientation="vertical"
             >
               <ToggleButton value={InputOptions.numPlotsSmall}>
                 Small
@@ -113,6 +120,9 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
               </ToggleButton>
               <ToggleButton value={InputOptions.numPlotsLarge}>
                 Large
+              </ToggleButton>
+              <ToggleButton value={InputOptions.numPlotsExtreme}>
+                Extreme
               </ToggleButton>
             </ToggleButtonGroup>
           </Stack>
@@ -125,7 +135,7 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
 export const Solver = (useProps: TravelingSalesmanSolver) => {
   const [plots, setPlots] = useProps.usePlots;
   const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useResult;
+  const [result, setResult] = useProps.useInfo;
   return (
     <ToggleButtonGroup
       color="primary"
@@ -143,8 +153,9 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
         Brute Force
       </ToggleButton>
       <ToggleButton value="bitDP" disabled={plots.numPlots > 20}>
-        Held-Karp (bit DP)
+        Held-Karp
       </ToggleButton>
+      <ToggleButton value="nn">Nearest Neighbor</ToggleButton>
     </ToggleButtonGroup>
   );
 };

@@ -167,6 +167,55 @@ impl Graph {
 
         paths
     }
+
+    pub fn solve_nn(&mut self) -> Vec<u32> {
+        let mut min_cost = 2e18;
+        let mut paths = Vec::new();
+
+        let num_iter = std::cmp::min(
+            1000 * 1000 / (self.nodes.len() * self.nodes.len()),
+            self.nodes.len(),
+        );
+
+        for start in 0..num_iter {
+            let mut visited = vec![false; self.nodes.len()];
+
+            let mut cur = start;
+            let mut cost = 0.0;
+            let mut cur_path = Vec::new();
+
+            cur_path.push(self.nodes[cur]);
+            for _ in 0..(self.nodes.len() - 1) {
+                visited[cur] = true;
+
+                let mut next = !0;
+                let mut min_edge = 2e18;
+                for i in 0..self.nodes.len() {
+                    if !visited[i] {
+                        let d = self.calc_distance(self.nodes[cur], self.nodes[i]);
+                        if min_edge > d {
+                            min_edge = d;
+                            next = i;
+                        }
+                    }
+                }
+
+                cost += min_edge;
+                cur = next;
+                cur_path.push(self.nodes[cur]);
+            }
+            cost += self.calc_distance(self.nodes[cur], self.nodes[start]);
+
+            if min_cost > cost {
+                min_cost = cost;
+                self.costs.push(cost);
+                for v in cur_path.into_iter() {
+                    paths.push(v);
+                }
+            }
+        }
+        paths
+    }
 }
 
 #[test]
@@ -200,3 +249,12 @@ fn test_tsp_solve_dp() {
 
     assert!((sum - graph_dp.min_cost) < 0.001);
 }
+
+// #[test]
+// fn test_tsp_solve_nn() {
+//     let mut graph = Graph::new(8, 25, 400);
+//     graph.build();
+
+//     let paths = graph.solve_nn();
+//     eprintln!("{:?}", paths);
+// }

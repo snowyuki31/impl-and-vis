@@ -6,21 +6,23 @@ import React from "react";
 
 const VisPage = ({
   pagename,
+  description,
   field,
-  resultArea,
+  infoArea,
   generator,
   solver,
 }: {
   pagename: string;
+  description?: string;
   field: React.ReactNode;
-  resultArea: React.ReactNode;
+  infoArea: React.ReactNode;
   generator: React.ReactNode;
   solver: React.ReactNode;
 }) => {
   return (
     <Layout pagename={pagename}>
       <h1>{pagename}</h1>
-      <FieldTemplate field={field} resultArea={resultArea} />
+      <FieldTemplate field={field} infoArea={infoArea} />
       <Container>
         <Grid container justifyContent="center" columnSpacing={1}>
           <Grid xs={8} sm={4} item>
@@ -39,10 +41,10 @@ export default VisPage;
 
 const FieldTemplate = ({
   field,
-  resultArea,
+  infoArea,
 }: {
   field: React.ReactNode;
-  resultArea: React.ReactNode;
+  infoArea: React.ReactNode;
 }) => {
   return (
     <Box
@@ -53,7 +55,7 @@ const FieldTemplate = ({
       {field}
 
       <Box sx={{ pt: 1 }} style={{ textAlign: "center" }}>
-        {resultArea}
+        {infoArea}
       </Box>
     </Box>
   );

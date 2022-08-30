@@ -94,6 +94,15 @@ function passStringToWasm0(arg, malloc, realloc) {
     WASM_VECTOR_LEN = offset;
     return ptr;
 }
+/**
+* @param {number} a
+* @param {number} b
+* @returns {number}
+*/
+export function add(a, b) {
+    const ret = wasm.add(a, b);
+    return ret;
+}
 
 let cachedFloat64Memory0 = new Float64Array();
 
@@ -111,16 +120,6 @@ function getArrayF64FromWasm0(ptr, len) {
 const u32CvtShim = new Uint32Array(2);
 
 const uint64CvtShim = new BigUint64Array(u32CvtShim.buffer);
-/**
-* @param {number} a
-* @param {number} b
-* @returns {number}
-*/
-export function add(a, b) {
-    const ret = wasm.add(a, b);
-    return ret;
-}
-
 /**
 */
 export const GridCell = Object.freeze({ Close:0,"0":"Close",Open:1,"1":"Open",Start:2,"2":"Start",Goal:3,"3":"Goal", });
@@ -223,6 +222,22 @@ export class Graph {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             wasm.graph_solve_dp(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @returns {Uint32Array}
+    */
+    solve_nn() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.graph_solve_nn(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayU32FromWasm0(r0, r1).slice();

@@ -16,7 +16,7 @@ import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AccordionDetails } from "@mui/material";
+import { AccordionDetails, Button } from "@mui/material";
 
 const GridMaze: NextPage = () => {
   const useProps: GridMazeSolver = {
@@ -37,7 +37,7 @@ const GridMaze: NextPage = () => {
     <VisPage
       pagename="Grid Maze"
       field={Field(useProps)}
-      resultArea={ResultArea(useProps)}
+      infoArea={InfoArea(useProps)}
       generator={Generator(useProps)}
       solver={Solver(useProps)}
     ></VisPage>
@@ -50,7 +50,7 @@ export const Field = (useProps: GridMazeSolver) => {
   return <Maze useProps={useProps}></Maze>;
 };
 
-export const ResultArea = (useProps: GridMazeSolver) => {
+export const InfoArea = (useProps: GridMazeSolver) => {
   const [result, setResult] = useProps.useResult;
   return (
     <>
@@ -109,6 +109,55 @@ export const Generator = (useProps: GridMazeSolver) => {
     </>
   );
 };
+
+// export const Solver = (useProps: GridMazeSolver) => {
+//   const [solver, setSolver] = useProps.useSolver;
+//   const [result, setResult] = useProps.useResult;
+
+//   return (
+//     <>
+//       <Accordion sx={{ mt: 1, bgcolor: "inherit" }}>
+//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>BFS</AccordionSummary>
+//         <AccordionDetails>
+//           <Button
+//             onClick={(e) => {
+//               setSolver({ ...solver, solver: "bfs" });
+//             }}
+//             disabled={solver.solver === "bfs"}
+//           >
+//             RUN
+//           </Button>
+//         </AccordionDetails>
+//       </Accordion>
+//       <Accordion sx={{ bgcolor: "inherit" }}>
+//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>DFS</AccordionSummary>
+//         <AccordionDetails>
+//           <Button
+//             onClick={(e) => {
+//               setSolver({ ...solver, solver: "dfs" });
+//             }}
+//             disabled={solver.solver === "dfs"}
+//           >
+//             RUN
+//           </Button>
+//         </AccordionDetails>
+//       </Accordion>
+//       <Accordion sx={{ bgcolor: "inherit" }}>
+//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>A*</AccordionSummary>
+//         <AccordionDetails>
+//           <Button
+//             onClick={(e) => {
+//               setSolver({ ...solver, solver: "astar" });
+//             }}
+//             disabled={solver.solver === "astar"}
+//           >
+//             RUN
+//           </Button>
+//         </AccordionDetails>
+//       </Accordion>
+//     </>
+//   );
+// };
 
 export const Solver = (useProps: GridMazeSolver) => {
   const [solver, setSolver] = useProps.useSolver;
