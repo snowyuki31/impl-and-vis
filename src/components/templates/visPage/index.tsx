@@ -70,7 +70,7 @@ const FieldTemplate = ({
 
 const GeneratorTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box>
+    <Box sx={{ bgcolor: "inherit" }}>
       <h3 style={{ textAlign: "center" }}>Generator</h3>
       {children}
     </Box>

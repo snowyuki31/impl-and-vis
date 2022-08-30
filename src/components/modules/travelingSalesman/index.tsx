@@ -91,16 +91,16 @@ const TravelingSalesman = ({
         const [x, y] = get_coords(element);
 
         if (plots.numPlots <= 300) {
-          context.strokeStyle = "rgba(255, 255, 255, 0.5)";
-          context.lineWidth = 7;
+          context.strokeStyle = "rgba(255, 255, 255, 0.4)";
+          context.lineWidth = 12;
           context.beginPath();
-          context.arc(x, y, 30, 0, 360, false);
+          context.arc(x, y, 40, 0, 360, false);
           context.stroke();
         } else {
-          context.strokeStyle = "rgba(255, 255, 255, 0.5)";
+          context.strokeStyle = "rgba(255, 255, 255, 0.4)";
           context.lineWidth = 7;
           context.beginPath();
-          context.arc(x, y, 20, 0, 360, false);
+          context.arc(x, y, 25, 0, 360, false);
           context.stroke();
         }
       });
@@ -154,7 +154,7 @@ const TravelingSalesman = ({
         setResult({ ...result, minCost: cost, optimal: null });
         setProgress((index * 100) / paths.length);
         resultContext?.clearRect(0, 0, plots.size, plots.size);
-        resultContext.strokeStyle = "#4747eb";
+        resultContext.strokeStyle = "#C84B31";
         resultContext.lineWidth = 12;
 
         resultContext.beginPath();
