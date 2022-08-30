@@ -23,7 +23,7 @@ const enum InputOptions {
   numPlotsSmall = 10,
   numPlotsMedium = 17,
   numPlotsLarge = 100,
-  numPlotsExtreme = 1000,
+  numPlotsExtreme = 500,
 }
 
 const TravelingSalesmanPage: NextPage = () => {
@@ -156,6 +156,7 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
         Held-Karp
       </ToggleButton>
       <ToggleButton value="nn">Nearest Neighbor</ToggleButton>
+      <ToggleButton value="nn-2opt">NN + 2-opt</ToggleButton>
     </ToggleButtonGroup>
   );
 };

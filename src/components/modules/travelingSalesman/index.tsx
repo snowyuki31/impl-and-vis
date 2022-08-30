@@ -91,16 +91,17 @@ const TravelingSalesman = ({
         const [x, y] = get_coords(element);
 
         if (plots.numPlots <= 300) {
-          context.strokeStyle = "white";
+          context.strokeStyle = "rgba(255, 255, 255, 0.5)";
           context.lineWidth = 7;
           context.beginPath();
           context.arc(x, y, 30, 0, 360, false);
           context.stroke();
         } else {
-          context.fillStyle = "white";
+          context.strokeStyle = "rgba(255, 255, 255, 0.5)";
+          context.lineWidth = 7;
           context.beginPath();
-          context.arc(x, y, 10, 0, 360, false);
-          context.fill();
+          context.arc(x, y, 20, 0, 360, false);
+          context.stroke();
         }
       });
       context.save();
@@ -125,17 +126,23 @@ const TravelingSalesman = ({
         let solved_paths = graph.solve_nn();
         setPaths(solved_paths);
         setCosts(graph.get_costs());
+      } else if (solver.solver === "nn-2opt") {
+        console.log("nearest negibors + 2 opt running!");
+        let solved_paths = graph.two_opt();
+        setPaths(solved_paths);
+        setCosts(graph.get_costs());
+
+        console.log(solved_paths.length);
       }
 
       const endTime = performance.now();
-      if (solver.solver != "")
-        setResult({
-          ...result,
-          status:
-            "Calculation completed in " +
-            (endTime - startTime).toFixed(2) +
-            " ms",
-        });
+      setResult({
+        ...result,
+        status:
+          "Calculation completed in " +
+          (endTime - startTime).toFixed(2) +
+          " ms",
+      });
     }
   }, [solver.solver]);
 

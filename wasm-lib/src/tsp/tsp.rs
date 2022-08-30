@@ -169,7 +169,6 @@ impl Graph {
     }
 
     pub fn solve_nn(&mut self) -> Vec<u32> {
-        let mut min_cost = 2e18;
         let mut paths = Vec::new();
 
         let num_iter = std::cmp::min(
@@ -206,14 +205,52 @@ impl Graph {
             }
             cost += self.calc_distance(self.nodes[cur], self.nodes[start]);
 
-            if min_cost > cost {
-                min_cost = cost;
+            if self.min_cost > cost {
+                self.min_cost = cost;
                 self.costs.push(cost);
                 for v in cur_path.into_iter() {
                     paths.push(v);
                 }
             }
         }
+        paths
+    }
+
+    pub fn two_opt(&mut self) -> Vec<u32> {
+        let mut paths = self.solve_nn();
+        let l = self.nodes.len();
+
+        let mut cur_path = Vec::new();
+        for i in (paths.len() - l)..(paths.len()) {
+            cur_path.push(paths[i]);
+        }
+
+        for _ in 0..500 {
+            for i0 in 0..(l - 1) {
+                let i1 = i0 + 1;
+                for j0 in (i0 + 2)..l {
+                    let j1 = (j0 + 1) % l;
+
+                    if i0 != 0 || j1 != 0 {
+                        let cur0 = self.calc_distance(cur_path[i0], cur_path[i1]);
+                        let cur1 = self.calc_distance(cur_path[j0], cur_path[j1]);
+                        let next0 = self.calc_distance(cur_path[i0], cur_path[j0]);
+                        let next1 = self.calc_distance(cur_path[j1], cur_path[i1]);
+
+                        if cur0 + cur1 > next0 + next1 {
+                            cur_path[i1..=j0].reverse();
+                            self.costs
+                                .push(self.costs.last().unwrap() - (cur0 + cur1 - next0 - next1));
+
+                            for v in cur_path.iter() {
+                                paths.push(*v);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         paths
     }
 }
