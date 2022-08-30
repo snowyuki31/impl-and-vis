@@ -73,6 +73,11 @@ export const InfoArea = (useProps: TravelingSalesmanSolver) => {
         {result.minCost !== 2e9 ? result.minCost.toFixed(2) : "inf"}
         {result.optimal === null ? "" : " (" + result.optimal + ")"}
       </div>
+      <div style={{ color: "#C84B31" }}>
+        {plots.numPlots > 300 && result.status === null
+          ? "Calculation may take a while."
+          : ""}
+      </div>
     </>
   );
 };

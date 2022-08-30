@@ -179,7 +179,7 @@ const TravelingSalesman = ({
         if (solver.solver === "bitDP" || solver.solver === "brute-force") {
           setResult({ ...result, optimal: "optimal" });
         } else {
-          setResult({ ...result, optimal: "estimated" });
+          setResult({ ...result, optimal: "heuristic" });
         }
       }
     }

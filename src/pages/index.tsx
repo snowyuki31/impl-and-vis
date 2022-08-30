@@ -16,7 +16,12 @@ const Home: NextPage = () => {
         </div>
         <div>
           <Link href="/traveling-salesman">
-            <a>Traveling Salesman (WIP)</a>
+            <a>Traveling Salesman</a>
+          </Link>
+        </div>
+        <div>
+          <Link href="/graph-coloring">
+            <a>Graph Coloring (WIP)</a>
           </Link>
         </div>
         <h1>Samples</h1>

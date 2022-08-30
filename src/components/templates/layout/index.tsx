@@ -30,8 +30,8 @@ const Layout = ({
   const title = (pagename !== "" ? pagename + " | " : "") + "Impl-and-vis";
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Container component="main" maxWidth="md">
-        <CssBaseline />
         <Head>
           <title>{title}</title>
         </Head>
@@ -47,11 +47,11 @@ const Layout = ({
             },
             paddingTop: {
               xs: 0,
-              md: 8,
+              md: 6,
             },
             paddingBottom: {
               xs: 0,
-              md: 8,
+              md: 0,
             },
             display: "flex",
             flexDirection: "column",
