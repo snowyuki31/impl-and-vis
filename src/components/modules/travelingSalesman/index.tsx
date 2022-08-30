@@ -178,32 +178,34 @@ const TravelingSalesman = ({
         setProgress(100);
       }
     }
-  }, 50);
+  }, 100);
 
   return (
-    <Box sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}>
-      <div className={styles.canvas_wrap}>
-        <canvas
-          ref={bgCanvasRef}
-          width={plots.size}
-          height={plots.size}
-          className={styles.canvas}
-        />
-        <canvas
-          ref={lineCanvasRef}
-          width={plots.size}
-          height={plots.size}
-          className={styles.canvas}
-        />
-        <canvas
-          ref={resultCanvasRef}
-          width={plots.size}
-          height={plots.size}
-          className={styles.canvas}
-        />
-      </div>
+    <>
+      <Box sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}>
+        <div className={styles.canvas_wrap}>
+          <canvas
+            ref={bgCanvasRef}
+            width={plots.size}
+            height={plots.size}
+            className={styles.canvas}
+          />
+          <canvas
+            ref={lineCanvasRef}
+            width={plots.size}
+            height={plots.size}
+            className={styles.canvas}
+          />
+          <canvas
+            ref={resultCanvasRef}
+            width={plots.size}
+            height={plots.size}
+            className={styles.canvas}
+          />
+        </div>
+      </Box>
       <LinearProgress variant="determinate" color="inherit" value={progress} />
-    </Box>
+    </>
   );
 };
 

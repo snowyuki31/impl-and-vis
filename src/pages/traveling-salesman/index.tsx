@@ -20,8 +20,8 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
 const enum InputOptions {
-  numPlotsSmall = 6,
-  numPlotsMedium = 18,
+  numPlotsSmall = 11,
+  numPlotsMedium = 20,
   numPlotsLarge = 60,
 }
 
@@ -139,7 +139,7 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
       size="medium"
       orientation="vertical"
     >
-      <ToggleButton value="brute-force" disabled={plots.numPlots > 10}>
+      <ToggleButton value="brute-force" disabled={plots.numPlots > 12}>
         Brute Force
       </ToggleButton>
       <ToggleButton value="bitDP" disabled={plots.numPlots > 20}>

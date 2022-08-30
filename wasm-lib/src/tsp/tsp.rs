@@ -101,19 +101,25 @@ impl Graph {
             sum += self.calc_distance(self.nodes[0], *perm[0]);
             sum += self.calc_distance(self.nodes[0], *perm[l - 2]);
 
-            paths.push(self.nodes[0]);
+            // paths.push(self.nodes[0]);
 
             for i in 0..(l - 2) {
                 sum += self.calc_distance(*perm[i], *perm[i + 1]);
-                paths.push(*perm[i]);
+                // paths.push(*perm[i]);
             }
-            paths.push(*perm[l - 2]);
+            // paths.push(*perm[l - 2]);
 
-            self.costs.push(sum);
+            // self.costs.push(sum);
 
             if min_cost > sum {
                 self.min_cost = sum;
                 min_cost = sum;
+
+                paths.push(self.nodes[0]);
+                for i in 0..(l - 1) {
+                    paths.push(*perm[i]);
+                }
+                self.costs.push(min_cost);
             }
         }
 
