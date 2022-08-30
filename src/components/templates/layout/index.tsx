@@ -37,6 +37,14 @@ const Layout = ({
         </Head>
         <Box
           sx={{
+            marginTop: {
+              xs: 4,
+              md: 0,
+            },
+            marginBottom: {
+              xs: 20,
+              md: 0,
+            },
             paddingTop: {
               xs: 0,
               md: 8,

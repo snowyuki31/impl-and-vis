@@ -47,17 +47,24 @@ const FieldTemplate = ({
   infoArea: React.ReactNode;
 }) => {
   return (
-    <Box
-      sx={{
-        width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
-      }}
-    >
-      {field}
-
-      <Box sx={{ pt: 1 }} style={{ textAlign: "center" }}>
+    <>
+      <Box
+        sx={{
+          width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
+        }}
+      >
+        {field}
+      </Box>
+      <Box
+        sx={{
+          pt: 1,
+          width: { xs: "90vw", sm: "80vw", md: "50vw", lg: "600px" },
+        }}
+        style={{ textAlign: "center" }}
+      >
         {infoArea}
       </Box>
-    </Box>
+    </>
   );
 };
 
