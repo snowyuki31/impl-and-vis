@@ -7,12 +7,13 @@ import init, { Graph } from "wasm-lib";
 import useInterval from "../../../utils/useInterval";
 
 import styles from "./style.module.css";
+import { GeneratorProps, SolverProps } from "../../../types/basicTypes";
 
-export type TSPState = {
-  seed: number;
-  size: number;
-  numPlots: number;
-};
+const plotSize = 2000;
+
+export type TSPGeneratorProps = GeneratorProps;
+
+export type TSPSolverProps = SolverProps;
 
 export type InfoState = {
   minCost: number;
@@ -21,12 +22,8 @@ export type InfoState = {
   status: string | null;
 };
 
-export type SolverProps = {
-  solver: string;
-};
-
 export type TravelingSalesmanSolver = {
-  usePlots: [TSPState, Dispatch<SetStateAction<TSPState>>];
+  usePlots: [TSPGeneratorProps, Dispatch<SetStateAction<TSPGeneratorProps>>];
   useSolver: [SolverProps, Dispatch<SetStateAction<SolverProps>>];
   useInfo: [InfoState, Dispatch<SetStateAction<InfoState>>];
 };
@@ -53,8 +50,8 @@ const TravelingSalesman = ({
   const resultCanvasRef = useRef<HTMLCanvasElement>(null);
 
   function get_coords(idx: number) {
-    const y = idx % plots.size;
-    const x = (idx - y) / plots.size;
+    const y = idx % plotSize;
+    const x = (idx - y) / plotSize;
     return [x, y];
   }
 
@@ -75,22 +72,22 @@ const TravelingSalesman = ({
     setIndex(0);
 
     init().then(() => {
-      const graph = Graph.new(plots.numPlots, plots.seed, plots.size);
+      const graph = Graph.new(plots.size, plots.seed, plotSize);
       graph.build();
       setGraph(graph);
     });
-  }, [plots.seed, plots.numPlots, solver.solver]);
+  }, [plots.seed, plots.size, solver.solver]);
 
   useEffect(() => {
     if (context !== null && graph) {
       console.log("len:", graph.get_nodes().length);
-      context.clearRect(0, 0, plots.size, plots.size);
-      resultContext?.clearRect(0, 0, plots.size, plots.size);
+      context.clearRect(0, 0, plotSize, plotSize);
+      resultContext?.clearRect(0, 0, plotSize, plotSize);
 
       graph.get_nodes().forEach((element: number) => {
         const [x, y] = get_coords(element);
 
-        if (plots.numPlots <= 300) {
+        if (plots.size <= 300) {
           context.strokeStyle = "rgba(255, 255, 255, 0.4)";
           context.lineWidth = 12;
           context.beginPath();
@@ -149,20 +146,20 @@ const TravelingSalesman = ({
   useInterval(() => {
     if (paths && costs && resultContext) {
       if (index < paths.length) {
-        let cost = costs[index / plots.numPlots];
+        let cost = costs[index / plots.size];
 
         setResult({ ...result, minCost: cost, optimal: null });
         setProgress((index * 100) / paths.length);
-        resultContext?.clearRect(0, 0, plots.size, plots.size);
+        resultContext?.clearRect(0, 0, plotSize, plotSize);
         resultContext.strokeStyle = "#C84B31";
         resultContext.lineWidth = 12;
 
         resultContext.beginPath();
 
-        for (let i = index; i < index + plots.numPlots; i++) {
+        for (let i = index; i < index + plots.size; i++) {
           const [sx, sy] = get_coords(paths[i]);
           let [gx, gy] = [0, 0];
-          if (i + 1 == index + plots.numPlots) {
+          if (i + 1 == index + plots.size) {
             [gx, gy] = get_coords(paths[index]);
           } else {
             [gx, gy] = get_coords(paths[i + 1]);
@@ -173,7 +170,7 @@ const TravelingSalesman = ({
 
         resultContext.stroke();
 
-        setIndex(index + plots.numPlots);
+        setIndex(index + plots.size);
       } else if (index == paths.length) {
         setProgress(100);
         if (solver.solver === "bitDP" || solver.solver === "brute-force") {
@@ -191,14 +188,14 @@ const TravelingSalesman = ({
         <div className={styles.canvas_wrap}>
           <canvas
             ref={bgCanvasRef}
-            width={plots.size}
-            height={plots.size}
+            width={plotSize}
+            height={plotSize}
             className={styles.canvas}
           />
           <canvas
             ref={resultCanvasRef}
-            width={plots.size}
-            height={plots.size}
+            width={plotSize}
+            height={plotSize}
             className={styles.canvas}
           />
         </div>

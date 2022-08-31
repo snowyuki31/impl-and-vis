@@ -3,10 +3,10 @@ import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import Maze, {
-  MazeState,
-  ResultState,
-  SolverProps,
-  GridMazeSolver,
+  MazeGeneratorProps,
+  MazeSolverProps,
+  MazeInfoProps,
+  MazeProblemProps,
 } from "../../components/blocks/gridMaze";
 
 import ToggleButton from "@mui/material/ToggleButton";
@@ -19,15 +19,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AccordionDetails, Button } from "@mui/material";
 
 const GridMaze: NextPage = () => {
-  const useProps: GridMazeSolver = {
-    usePlots: useState<MazeState>({
+  const useProblem: MazeProblemProps = {
+    useGenerator: useState<MazeGeneratorProps>({
       seed: Math.floor(Math.random() * 100),
       size: 35,
     }),
-    useSolver: useState<SolverProps>({
+    useSolver: useState<MazeSolverProps>({
       solver: "None",
     }),
-    useResult: useState<ResultState>({
+    useInfo: useState<MazeInfoProps>({
       length: -1,
       visited: -1,
     }),
@@ -36,22 +36,22 @@ const GridMaze: NextPage = () => {
   return (
     <VisPage
       pagename="Grid Maze"
-      field={Field(useProps)}
-      infoArea={InfoArea(useProps)}
-      generator={Generator(useProps)}
-      solver={Solver(useProps)}
+      field={Field(useProblem)}
+      infoArea={InfoArea(useProblem)}
+      generator={Generator(useProblem)}
+      solver={Solver(useProblem)}
     ></VisPage>
   );
 };
 
 export default GridMaze;
 
-export const Field = (useProps: GridMazeSolver) => {
-  return <Maze useProps={useProps}></Maze>;
+export const Field = (problemProps: MazeProblemProps) => {
+  return <Maze problemProps={problemProps}></Maze>;
 };
 
-export const InfoArea = (useProps: GridMazeSolver) => {
-  const [result, setResult] = useProps.useResult;
+export const InfoArea = (useProblem: MazeProblemProps) => {
+  const [result, setResult] = useProblem.useInfo;
   return (
     <>
       <div>Path Length: {result.length != -1 ? result.length : "-"}</div>
@@ -60,10 +60,10 @@ export const InfoArea = (useProps: GridMazeSolver) => {
   );
 };
 
-export const Generator = (useProps: GridMazeSolver) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useResult;
+export const Generator = (problemProps: MazeProblemProps) => {
+  const [plots, setPlots] = problemProps.useGenerator;
+  const [solver, setSolver] = problemProps.useSolver;
+  const [result, setResult] = problemProps.useInfo;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -110,58 +110,9 @@ export const Generator = (useProps: GridMazeSolver) => {
   );
 };
 
-// export const Solver = (useProps: GridMazeSolver) => {
-//   const [solver, setSolver] = useProps.useSolver;
-//   const [result, setResult] = useProps.useResult;
-
-//   return (
-//     <>
-//       <Accordion sx={{ mt: 1, bgcolor: "inherit" }}>
-//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>BFS</AccordionSummary>
-//         <AccordionDetails>
-//           <Button
-//             onClick={(e) => {
-//               setSolver({ ...solver, solver: "bfs" });
-//             }}
-//             disabled={solver.solver === "bfs"}
-//           >
-//             RUN
-//           </Button>
-//         </AccordionDetails>
-//       </Accordion>
-//       <Accordion sx={{ bgcolor: "inherit" }}>
-//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>DFS</AccordionSummary>
-//         <AccordionDetails>
-//           <Button
-//             onClick={(e) => {
-//               setSolver({ ...solver, solver: "dfs" });
-//             }}
-//             disabled={solver.solver === "dfs"}
-//           >
-//             RUN
-//           </Button>
-//         </AccordionDetails>
-//       </Accordion>
-//       <Accordion sx={{ bgcolor: "inherit" }}>
-//         <AccordionSummary expandIcon={<ExpandMoreIcon />}>A*</AccordionSummary>
-//         <AccordionDetails>
-//           <Button
-//             onClick={(e) => {
-//               setSolver({ ...solver, solver: "astar" });
-//             }}
-//             disabled={solver.solver === "astar"}
-//           >
-//             RUN
-//           </Button>
-//         </AccordionDetails>
-//       </Accordion>
-//     </>
-//   );
-// };
-
-export const Solver = (useProps: GridMazeSolver) => {
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useResult;
+export const Solver = (problemProps: MazeProblemProps) => {
+  const [solver, setSolver] = problemProps.useSolver;
+  const [result, setResult] = problemProps.useInfo;
   return (
     <ToggleButtonGroup
       color="primary"

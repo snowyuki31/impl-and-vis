@@ -1,30 +1,32 @@
 import Cell from "../../atoms/cell";
 import init, { Grid, GridCell } from "wasm-lib";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import styles from "./style.module.css";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useInterval from "../../../utils/useInterval";
 
-export type MazeState = {
-  seed: number;
-  size: number;
-};
+import {
+  GeneratorProps,
+  SolverProps,
+  InfoProps,
+  ProblemProps,
+} from "../../../types/basicTypes";
 
-export type SolverProps = {
-  solver: string;
-};
+export type MazeGeneratorProps = GeneratorProps;
 
-export type ResultState = {
+export type MazeSolverProps = SolverProps;
+
+export type MazeInfoProps = InfoProps & {
   length: number;
   visited: number;
 };
 
-export type GridMazeSolver = {
-  usePlots: [MazeState, Dispatch<SetStateAction<MazeState>>];
-  useSolver: [SolverProps, Dispatch<SetStateAction<SolverProps>>];
-  useResult: [ResultState, Dispatch<SetStateAction<ResultState>>];
-};
+export type MazeProblemProps = ProblemProps<
+  GeneratorProps,
+  SolverProps,
+  MazeInfoProps
+>;
 
 function buildMaze(grid: Grid) {
   var elements = [];
@@ -56,10 +58,10 @@ function buildMaze(grid: Grid) {
   return elements;
 }
 
-const Maze = ({ useProps }: { useProps: GridMazeSolver }) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useResult;
+const Maze = ({ problemProps }: { problemProps: MazeProblemProps }) => {
+  const [plots, setPlots] = problemProps.useGenerator;
+  const [solver, setSolver] = problemProps.useSolver;
+  const [result, setResult] = problemProps.useInfo;
 
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();

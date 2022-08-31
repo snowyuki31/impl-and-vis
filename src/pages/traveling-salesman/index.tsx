@@ -3,9 +3,9 @@ import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman, {
-  TSPState,
+  TSPGeneratorProps,
   InfoState,
-  SolverProps,
+  TSPSolverProps,
 } from "../../components/modules/travelingSalesman";
 
 import { TravelingSalesmanSolver } from "../../components/modules/travelingSalesman";
@@ -28,12 +28,11 @@ const enum InputOptions {
 
 const TravelingSalesmanPage: NextPage = () => {
   const useProps: TravelingSalesmanSolver = {
-    usePlots: useState<TSPState>({
+    usePlots: useState<TSPGeneratorProps>({
       seed: Math.floor(Math.random() * 100),
-      size: 2000,
-      numPlots: InputOptions.numPlotsSmall,
+      size: InputOptions.numPlotsSmall,
     }),
-    useSolver: useState<SolverProps>({
+    useSolver: useState<TSPSolverProps>({
       solver: "None",
     }),
     useInfo: useState<InfoState>({
@@ -66,7 +65,7 @@ export const InfoArea = (useProps: TravelingSalesmanSolver) => {
   const [result, setResult] = useProps.useInfo;
   return (
     <>
-      <div>n={plots.numPlots}</div>
+      <div>n={plots.size}</div>
       <div>{result.status}</div>
       <div>
         Minimum Cost:{" "}
@@ -74,7 +73,7 @@ export const InfoArea = (useProps: TravelingSalesmanSolver) => {
         {result.optimal === null ? "" : " (" + result.optimal + ")"}
       </div>
       <div style={{ color: "#C84B31" }}>
-        {plots.numPlots > 300 && result.status === null
+        {plots.size > 300 && result.status === null
           ? "Calculation may take a while."
           : ""}
       </div>
@@ -107,10 +106,10 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
             <ToggleButtonGroup
               color="primary"
               exclusive
-              value={plots.numPlots}
+              value={plots.size}
               onChange={(_, newNumPlots) => {
                 if (newNumPlots !== null) {
-                  setPlots({ ...plots, numPlots: newNumPlots });
+                  setPlots({ ...plots, size: newNumPlots });
                   setSolver({ ...solver, solver: "None" });
                 }
               }}
@@ -154,10 +153,10 @@ export const Solver = (useProps: TravelingSalesmanSolver) => {
       size="medium"
       orientation="vertical"
     >
-      <ToggleButton value="brute-force" disabled={plots.numPlots > 12}>
+      <ToggleButton value="brute-force" disabled={plots.size > 12}>
         Brute Force
       </ToggleButton>
-      <ToggleButton value="bitDP" disabled={plots.numPlots > 20}>
+      <ToggleButton value="bitDP" disabled={plots.size > 20}>
         Held-Karp
       </ToggleButton>
       <ToggleButton value="nn">Nearest Neighbor</ToggleButton>
