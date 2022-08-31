@@ -63,8 +63,8 @@ export const Info = (hooks: StateHooks) => {
   );
   const outputInfo = (
     <>
-      <div>Path Length: {length}</div>
-      <div>Visited Cells: {visited}</div>
+      <div>Path Length: {length ? length : "-"}</div>
+      <div>Visited Cells: {visited ? visited : "-"}</div>
     </>
   );
 
@@ -107,7 +107,6 @@ export const Generator = (hooks: StateHooks) => {
 };
 
 export const Solver = (hooks: StateHooks) => {
-  const [info, setInfo] = hooks.useInfo;
   const ToggleButtons = [
     <ToggleButton key={SolverOptions.BFS} value={SolverOptions.BFS}>
       {SolverOptions.BFS}

@@ -28,13 +28,13 @@ export type SolverProps = SolverPropsBase & {
 export const defaultInfo: InfoProps = {
   calculationTime: null,
   progress: 0,
-  length: "-",
-  visited: "-",
+  length: null,
+  visited: null,
 } as const;
 
 export type InfoProps = InfoPropsBase & {
-  length: number | "-";
-  visited: number | "-";
+  length: number | null;
+  visited: number | null;
 };
 
 export type StateHooks = StateHooksBase<GeneratorProps, SolverProps, InfoProps>;

@@ -26,7 +26,7 @@ export const InfoArea = <T extends GeneralStateHooks>({
     <>
       {legend}
       {inputInfo}
-      {timeInfo}
+      {info.calculationTime !== null && timeInfo}
       {outputInfo}
       {warning}
     </>

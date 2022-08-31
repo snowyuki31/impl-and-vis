@@ -157,7 +157,7 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
 
         setResult({
           ...result,
-          minCost: cost.toFixed(2),
+          minCost: cost,
           optimal: null,
           progress: (index * 100) / paths.length,
         });

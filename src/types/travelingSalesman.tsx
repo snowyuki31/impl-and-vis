@@ -34,13 +34,13 @@ export type SolverProps = SolverPropsBase & {
 };
 
 export type InfoProps = InfoPropsBase & {
-  minCost: string;
+  minCost: number | null;
   optimal: string | null;
 };
 
 export const defaultInfo: InfoProps = {
   progress: 0,
-  minCost: "inf",
+  minCost: null,
   optimal: null,
   calculationTime: null,
 };

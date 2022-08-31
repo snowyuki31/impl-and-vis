@@ -57,7 +57,7 @@ export const Info = (hooks: StateHooks) => {
   const inputInfo = <div>n={generator.size}</div>;
   const outputInfo = (
     <div>
-      Minimum Cost: {result.minCost}
+      Minimum Cost: {result.minCost ? result.minCost.toFixed(2) : "inf"}
       {result.optimal === null ? "" : " (" + result.optimal + ")"}
     </div>
   );
