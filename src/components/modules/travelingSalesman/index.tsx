@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import { CanvasRenderingContext2D } from "canvas";
@@ -7,7 +7,12 @@ import init, { Graph } from "wasm-lib";
 import useInterval from "../../../utils/useInterval";
 
 import styles from "./style.module.css";
-import { GeneratorProps, SolverProps } from "../../../types/basicTypes";
+import {
+  GeneratorProps,
+  SolverProps,
+  InfoProps,
+  StateHooks,
+} from "../../../types/basicTypes";
 
 const plotSize = 2000;
 
@@ -15,27 +20,23 @@ export type TSPGeneratorProps = GeneratorProps;
 
 export type TSPSolverProps = SolverProps;
 
-export type InfoState = {
+export type TSPInfoProps = InfoProps & {
   minCost: number;
   optimal: string | null;
   calculationTime: number;
   status: string | null;
 };
 
-export type TravelingSalesmanSolver = {
-  usePlots: [TSPGeneratorProps, Dispatch<SetStateAction<TSPGeneratorProps>>];
-  useSolver: [SolverProps, Dispatch<SetStateAction<SolverProps>>];
-  useInfo: [InfoState, Dispatch<SetStateAction<InfoState>>];
-};
+export type TSPHooks = StateHooks<
+  TSPGeneratorProps,
+  TSPSolverProps,
+  TSPInfoProps
+>;
 
-const TravelingSalesman = ({
-  useProps,
-}: {
-  useProps: TravelingSalesmanSolver;
-}) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useInfo;
+const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
 
   const [graph, setGraph] = useState<Graph>();
   const [paths, setPaths] = useState<Uint32Array | null>();

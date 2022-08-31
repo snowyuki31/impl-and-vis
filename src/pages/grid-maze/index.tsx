@@ -6,7 +6,7 @@ import Maze, {
   MazeGeneratorProps,
   MazeSolverProps,
   MazeInfoProps,
-  MazeProblemProps,
+  MazeHooks,
 } from "../../components/blocks/gridMaze";
 
 import ToggleButton from "@mui/material/ToggleButton";
@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AccordionDetails, Button } from "@mui/material";
 
 const GridMaze: NextPage = () => {
-  const useProblem: MazeProblemProps = {
+  const hooks: MazeHooks = {
     useGenerator: useState<MazeGeneratorProps>({
       seed: Math.floor(Math.random() * 100),
       size: 35,
@@ -36,22 +36,22 @@ const GridMaze: NextPage = () => {
   return (
     <VisPage
       pagename="Grid Maze"
-      field={Field(useProblem)}
-      infoArea={InfoArea(useProblem)}
-      generator={Generator(useProblem)}
-      solver={Solver(useProblem)}
+      field={Field(hooks)}
+      infoArea={InfoArea(hooks)}
+      generator={Generator(hooks)}
+      solver={Solver(hooks)}
     ></VisPage>
   );
 };
 
 export default GridMaze;
 
-export const Field = (problemProps: MazeProblemProps) => {
-  return <Maze problemProps={problemProps}></Maze>;
+export const Field = (hooks: MazeHooks) => {
+  return <Maze hooks={hooks}></Maze>;
 };
 
-export const InfoArea = (useProblem: MazeProblemProps) => {
-  const [result, setResult] = useProblem.useInfo;
+export const InfoArea = (hooks: MazeHooks) => {
+  const [result, setResult] = hooks.useInfo;
   return (
     <>
       <div>Path Length: {result.length != -1 ? result.length : "-"}</div>
@@ -60,10 +60,10 @@ export const InfoArea = (useProblem: MazeProblemProps) => {
   );
 };
 
-export const Generator = (problemProps: MazeProblemProps) => {
-  const [plots, setPlots] = problemProps.useGenerator;
-  const [solver, setSolver] = problemProps.useSolver;
-  const [result, setResult] = problemProps.useInfo;
+export const Generator = (hooks: MazeHooks) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -110,9 +110,9 @@ export const Generator = (problemProps: MazeProblemProps) => {
   );
 };
 
-export const Solver = (problemProps: MazeProblemProps) => {
-  const [solver, setSolver] = problemProps.useSolver;
-  const [result, setResult] = problemProps.useInfo;
+export const Solver = (hooks: MazeHooks) => {
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
   return (
     <ToggleButtonGroup
       color="primary"

@@ -11,7 +11,7 @@ export type SolverProps = {
 
 export type InfoProps = {};
 
-export type ProblemProps<
+export type StateHooks<
   G extends GeneratorProps,
   S extends SolverProps,
   I extends InfoProps

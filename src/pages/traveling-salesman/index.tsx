@@ -4,11 +4,10 @@ import { useState } from "react";
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman, {
   TSPGeneratorProps,
-  InfoState,
+  TSPInfoProps,
   TSPSolverProps,
+  TSPHooks,
 } from "../../components/modules/travelingSalesman";
-
-import { TravelingSalesmanSolver } from "../../components/modules/travelingSalesman";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -27,15 +26,15 @@ const enum InputOptions {
 }
 
 const TravelingSalesmanPage: NextPage = () => {
-  const useProps: TravelingSalesmanSolver = {
-    usePlots: useState<TSPGeneratorProps>({
+  const hooks: TSPHooks = {
+    useGenerator: useState<TSPGeneratorProps>({
       seed: Math.floor(Math.random() * 100),
       size: InputOptions.numPlotsSmall,
     }),
     useSolver: useState<TSPSolverProps>({
       solver: "None",
     }),
-    useInfo: useState<InfoState>({
+    useInfo: useState<TSPInfoProps>({
       minCost: 2e9,
       calculationTime: -1,
       status: "",
@@ -46,23 +45,23 @@ const TravelingSalesmanPage: NextPage = () => {
   return (
     <VisPage
       pagename="Traveling Salesman"
-      field={Field(useProps)}
-      infoArea={InfoArea(useProps)}
-      generator={Generator(useProps)}
-      solver={Solver(useProps)}
+      field={Field(hooks)}
+      infoArea={InfoArea(hooks)}
+      generator={Generator(hooks)}
+      solver={Solver(hooks)}
     ></VisPage>
   );
 };
 
 export default TravelingSalesmanPage;
 
-export const Field = (useProps: TravelingSalesmanSolver) => {
-  return <TravelingSalesman useProps={useProps} />;
+export const Field = (hooks: TSPHooks) => {
+  return <TravelingSalesman hooks={hooks} />;
 };
 
-export const InfoArea = (useProps: TravelingSalesmanSolver) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [result, setResult] = useProps.useInfo;
+export const InfoArea = (hooks: TSPHooks) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [result, setResult] = hooks.useInfo;
   return (
     <>
       <div>n={plots.size}</div>
@@ -81,10 +80,10 @@ export const InfoArea = (useProps: TravelingSalesmanSolver) => {
   );
 };
 
-export const Generator = (useProps: TravelingSalesmanSolver) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useInfo;
+export const Generator = (hooks: TSPHooks) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
   return (
     <>
       <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
@@ -136,10 +135,10 @@ export const Generator = (useProps: TravelingSalesmanSolver) => {
   );
 };
 
-export const Solver = (useProps: TravelingSalesmanSolver) => {
-  const [plots, setPlots] = useProps.usePlots;
-  const [solver, setSolver] = useProps.useSolver;
-  const [result, setResult] = useProps.useInfo;
+export const Solver = (hooks: TSPHooks) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
   return (
     <ToggleButtonGroup
       color="primary"

@@ -10,7 +10,7 @@ import {
   GeneratorProps,
   SolverProps,
   InfoProps,
-  ProblemProps,
+  StateHooks,
 } from "../../../types/basicTypes";
 
 export type MazeGeneratorProps = GeneratorProps;
@@ -22,11 +22,7 @@ export type MazeInfoProps = InfoProps & {
   visited: number;
 };
 
-export type MazeProblemProps = ProblemProps<
-  GeneratorProps,
-  SolverProps,
-  MazeInfoProps
->;
+export type MazeHooks = StateHooks<GeneratorProps, SolverProps, MazeInfoProps>;
 
 function buildMaze(grid: Grid) {
   var elements = [];
@@ -58,10 +54,10 @@ function buildMaze(grid: Grid) {
   return elements;
 }
 
-const Maze = ({ problemProps }: { problemProps: MazeProblemProps }) => {
-  const [plots, setPlots] = problemProps.useGenerator;
-  const [solver, setSolver] = problemProps.useSolver;
-  const [result, setResult] = problemProps.useInfo;
+const Maze = ({ hooks }: { hooks: MazeHooks }) => {
+  const [plots, setPlots] = hooks.useGenerator;
+  const [solver, setSolver] = hooks.useSolver;
+  const [result, setResult] = hooks.useInfo;
 
   const [grid, setGrid] = useState<Grid>();
   const [maze, setMaze] = useState<JSX.Element[]>();
