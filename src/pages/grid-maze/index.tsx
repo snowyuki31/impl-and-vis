@@ -18,6 +18,7 @@ import {
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
 import CanvasArea from "../../components/blocks/canvasArea";
+import InfoArea from "../../components/blocks/infoArea";
 
 import Stack from "@mui/material/Stack";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -38,7 +39,7 @@ const GridMaze: NextPage = () => {
     <VisPage
       pagename="Grid Maze"
       field={Field(hooks)}
-      infoArea={InfoArea(hooks)}
+      infoArea={Info(hooks)}
       generator={Generator(hooks)}
       solver={Solver(hooks)}
     ></VisPage>
@@ -52,9 +53,22 @@ export const Field = (hooks: StateHooks) => {
   return <CanvasArea hooks={hooks} field={field}></CanvasArea>;
 };
 
-export const InfoArea = (hooks: StateHooks) => {
-  const [result, setResult] = hooks.useInfo;
-  return (
+export const Info = (hooks: StateHooks) => {
+  const { size } = hooks.useGenerator[0];
+  const { length, visited } = hooks.useInfo[0];
+  const inputInfo = (
+    <div>
+      Size: {size}×{size}
+    </div>
+  );
+  const outputInfo = (
+    <>
+      <div>Path Length: {length}</div>
+      <div>Visited Cells: {visited}</div>
+    </>
+  );
+
+  const legend = (
     <>
       <Stack direction="row" justifyContent="center" spacing={5} sx={{ mt: 1 }}>
         <Stack direction="row" justifyContent="center">
@@ -66,14 +80,13 @@ export const InfoArea = (hooks: StateHooks) => {
           Goal
         </Stack>
       </Stack>
-      <div>Path Length: {result.length}</div>
-      <div>Visited Cells: {result.visited}</div>
     </>
   );
+
+  return InfoArea({ hooks, inputInfo, outputInfo, legend });
 };
 
 export const Generator = (hooks: StateHooks) => {
-  const [info, setInfo] = hooks.useInfo;
   const ToggleButtons = [
     <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small

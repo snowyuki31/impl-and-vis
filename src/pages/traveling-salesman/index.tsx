@@ -4,6 +4,7 @@ import { useState } from "react";
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman from "../../components/modules/travelingSalesman";
 import SolverArea from "../../components/blocks/solverArea";
+import InfoArea from "../../components/blocks/infoArea";
 import { CanvasArea } from "../../components/blocks/canvasArea";
 
 import {
@@ -23,24 +24,19 @@ const TravelingSalesmanPage: NextPage = () => {
   const hooks: StateHooks = {
     useGenerator: useState<GeneratorProps>({
       seed: Math.floor(Math.random() * 100),
-      size: SizeOptions.Small,
+      size: SizeOptions.Large,
     }),
     useSolver: useState<SolverProps>({
       solver: null,
     }),
-    useInfo: useState<InfoProps>({
-      progress: 0,
-      minCost: "inf",
-      status: "",
-      optimal: null,
-    }),
+    useInfo: useState<InfoProps>(defaultInfo),
   };
 
   return (
     <VisPage
       pagename="Traveling Salesman"
       field={Field(hooks)}
-      infoArea={InfoArea(hooks)}
+      infoArea={Info(hooks)}
       generator={Generator(hooks)}
       solver={Solver(hooks)}
     ></VisPage>
@@ -54,29 +50,23 @@ export const Field = (hooks: StateHooks) => {
   return <CanvasArea hooks={hooks} field={field}></CanvasArea>;
 };
 
-export const InfoArea = (hooks: StateHooks) => {
-  const [plots, setPlots] = hooks.useGenerator;
+export const Info = (hooks: StateHooks) => {
+  const [generator, setGenerator] = hooks.useGenerator;
   const [result, setResult] = hooks.useInfo;
-  return (
-    <>
-      <div>n={plots.size}</div>
-      <div>{result.status}</div>
-      <div>
-        Minimum Cost: {result.minCost}
-        {result.optimal === null ? "" : " (" + result.optimal + ")"}
-      </div>
-      <div style={{ color: "#C84B31" }}>
-        {plots.size > 300 && result.status === null
-          ? "Calculation may take a while."
-          : ""}
-      </div>
-    </>
+
+  const inputInfo = <div>n={generator.size}</div>;
+  const outputInfo = (
+    <div>
+      Minimum Cost: {result.minCost}
+      {result.optimal === null ? "" : " (" + result.optimal + ")"}
+    </div>
   );
+  const isWarning = generator.size > 300 && result.calculationTime === null;
+
+  return InfoArea({ hooks, inputInfo, outputInfo, isWarning });
 };
 
 export const Generator = (hooks: StateHooks) => {
-  const [info, useInfo] = hooks.useInfo;
-
   const ToggleButtons = [
     <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small

@@ -11,6 +11,7 @@ export type SolverPropsBase = {
 
 export type InfoPropsBase = {
   progress: number;
+  calculationTime: number | null;
 };
 
 export type StateHooksBase<

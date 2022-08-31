@@ -6,7 +6,6 @@ import {
   SetStateAction,
   Dispatch,
 } from "react";
-import Box from "@mui/material/Box";
 import { CanvasRenderingContext2D } from "canvas";
 
 import init, { Graph } from "wasm-lib";
@@ -81,8 +80,9 @@ const InitBgCanvas = (
 };
 
 const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
-  const [generator, setGenerator] = hooks.useGenerator;
-  const [solver, setSolver] = hooks.useSolver;
+  const generator = hooks.useGenerator[0];
+  const { size, seed } = generator;
+  const { solver } = hooks.useSolver[0];
   const [result, setResult] = hooks.useInfo;
 
   const [graph, setGraph] = useState<Graph>();
@@ -112,19 +112,19 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
     );
 
     init().then(() => {
-      const graph = Graph.new(generator.size, generator.seed, VisOptions.Width);
+      const graph = Graph.new(size, seed, VisOptions.Width);
       graph.build();
       setGraph(graph);
     });
-  }, [generator, solver]);
+  }, [size, seed, solver]);
 
   InitBgCanvas(canvasState, generator, graph);
 
   useEffect(() => {
-    if (graph && solver.solver !== null) {
+    if (graph && solver !== null) {
       const startTime = performance.now();
       let solved_paths;
-      switch (solver.solver) {
+      switch (solver) {
         case SolverOptions.BF:
           solved_paths = graph.solve_bf();
           break;
@@ -145,10 +145,7 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
       const endTime = performance.now();
       setResult({
         ...result,
-        status:
-          "Calculation completed in " +
-          (endTime - startTime).toFixed(2) +
-          " ms",
+        calculationTime: endTime - startTime,
       });
     }
   }, [solver]);
@@ -191,10 +188,7 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
 
         setIndex(index + generator.size);
       } else if (index == paths.length) {
-        if (
-          solver.solver === SolverOptions.BF ||
-          solver.solver === SolverOptions.DP
-        ) {
+        if (solver === SolverOptions.BF || solver === SolverOptions.DP) {
           setResult({ ...result, optimal: "optimal", progress: 100 });
         } else {
           setResult({ ...result, optimal: "heuristic", progress: 100 });

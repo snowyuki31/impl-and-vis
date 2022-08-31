@@ -36,14 +36,13 @@ export type SolverProps = SolverPropsBase & {
 export type InfoProps = InfoPropsBase & {
   minCost: string;
   optimal: string | null;
-  status: string | null;
 };
 
 export const defaultInfo: InfoProps = {
   progress: 0,
   minCost: "inf",
   optimal: null,
-  status: null,
+  calculationTime: null,
 };
 
 export type StateHooks = StateHooksBase<GeneratorProps, SolverProps, InfoProps>;

@@ -44,8 +44,8 @@ function buildMaze(grid: Grid) {
 }
 
 const Maze = ({ hooks }: { hooks: StateHooks }) => {
-  const [plots, setPlots] = hooks.useGenerator;
-  const [solver, setSolver] = hooks.useSolver;
+  const { size, seed } = hooks.useGenerator[0];
+  const { solver } = hooks.useSolver[0];
   const [result, setResult] = hooks.useInfo;
 
   const [grid, setGrid] = useState<Grid>();
@@ -60,23 +60,23 @@ const Maze = ({ hooks }: { hooks: StateHooks }) => {
     setIndex(0);
 
     init().then(() => {
-      const grid = Grid.new(plots.size, plots.size, plots.seed);
+      const grid = Grid.new(size, size, seed);
       grid.build();
       setGrid(grid);
       setMaze(buildMaze(grid));
     });
-  }, [plots]);
+  }, [size, seed]);
 
   useEffect(() => {
     setIndex(0);
-    console.log("Calle");
 
-    if (grid && solver.solver !== null) {
+    if (grid && solver !== null) {
       grid.initialize_values();
       setMaze(buildMaze(grid));
 
+      let startTime = performance.now();
       let ret = null;
-      switch (solver.solver) {
+      switch (solver) {
         case SolverOptions.BFS:
           ret = grid.bfs();
           break;
@@ -87,8 +87,15 @@ const Maze = ({ hooks }: { hooks: StateHooks }) => {
           ret = grid.astar();
           break;
       }
+      let endTime = performance.now();
 
-      setResult({ ...result, visited: 1 });
+      console.log(endTime - startTime);
+
+      setResult({
+        ...result,
+        visited: 1,
+        calculationTime: endTime - startTime,
+      });
       setSteps(ret);
       setPath(grid.trace_back());
     }
@@ -132,7 +139,7 @@ const Maze = ({ hooks }: { hooks: StateHooks }) => {
         setIndex(index + 1);
       }
     }
-  }, (35 * 15) / plots.size);
+  }, (35 * 15) / size);
 
   return (
     <Box

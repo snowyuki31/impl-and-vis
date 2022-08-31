@@ -25,4 +25,9 @@ export type SolverProps = SolverPropsBase & {
 
 export type InfoProps = InfoPropsBase & {};
 
+export const defaultInfo: InfoProps = {
+  progress: 0,
+  calculationTime: null,
+};
+
 export type StateHooks = StateHooksBase<GeneratorProps, SolverProps, InfoProps>;

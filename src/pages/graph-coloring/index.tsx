@@ -11,6 +11,7 @@ import {
   StateHooks,
   SizeOptions,
   SolverOptions,
+  defaultInfo,
 } from "../../types/graphColoring";
 
 import SolverArea from "../../components/blocks/solverArea";
@@ -26,7 +27,7 @@ const GraphColoringPage: NextPage = () => {
     useSolver: useState<SolverProps>({
       solver: null,
     }),
-    useInfo: useState<InfoProps>({ progress: 0 }),
+    useInfo: useState<InfoProps>(defaultInfo),
   };
 
   return (
@@ -52,8 +53,6 @@ export const InfoArea = (hooks: StateHooks) => {
 export default GraphColoringPage;
 
 export const Generator = (hooks: StateHooks) => {
-  const [info, setInfo] = hooks.useInfo;
-  const defaultInfo = { ...info };
   const ToggleButtons = [
     <ToggleButton key="small" value={SizeOptions.Small}>
       Small
@@ -74,8 +73,6 @@ export const Generator = (hooks: StateHooks) => {
 };
 
 export const Solver = (hooks: StateHooks) => {
-  const [info, setInfo] = hooks.useInfo;
-  const defaultInfo: InfoProps = { ...info };
   const ToggleButtons = [
     <ToggleButton key={SolverOptions.Greedy} value={SolverOptions.Greedy}>
       {SolverOptions.Greedy}

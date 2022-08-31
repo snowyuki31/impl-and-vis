@@ -25,7 +25,8 @@ export type SolverProps = SolverPropsBase & {
   solver: typeof SolverOptions[keyof typeof SolverOptions] | null;
 };
 
-export const defaultInfo = {
+export const defaultInfo: InfoProps = {
+  calculationTime: null,
   progress: 0,
   length: "-",
   visited: "-",
