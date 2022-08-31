@@ -4,6 +4,7 @@ import { useState } from "react";
 import VisPage from "../../components/templates/visPage";
 import TravelingSalesman from "../../components/modules/travelingSalesman";
 import SolverArea from "../../components/blocks/solverArea";
+import { CanvasArea } from "../../components/blocks/canvasArea";
 
 import {
   SolverOptions,
@@ -11,6 +12,7 @@ import {
   GeneratorProps,
   SolverProps,
   InfoProps,
+  defaultInfo,
   StateHooks,
 } from "../../types/travelingSalesman";
 
@@ -27,6 +29,7 @@ const TravelingSalesmanPage: NextPage = () => {
       solver: null,
     }),
     useInfo: useState<InfoProps>({
+      progress: 0,
       minCost: "inf",
       status: "",
       optimal: null,
@@ -47,7 +50,8 @@ const TravelingSalesmanPage: NextPage = () => {
 export default TravelingSalesmanPage;
 
 export const Field = (hooks: StateHooks) => {
-  return <TravelingSalesman hooks={hooks} />;
+  const field = <TravelingSalesman hooks={hooks}></TravelingSalesman>;
+  return <CanvasArea hooks={hooks} field={field}></CanvasArea>;
 };
 
 export const InfoArea = (hooks: StateHooks) => {
@@ -73,13 +77,6 @@ export const InfoArea = (hooks: StateHooks) => {
 export const Generator = (hooks: StateHooks) => {
   const [info, useInfo] = hooks.useInfo;
 
-  const defaultInfo: InfoProps = {
-    ...info,
-    minCost: "inf",
-    status: null,
-    optimal: null,
-  };
-
   const ToggleButtons = [
     <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small
@@ -103,7 +100,6 @@ export const Generator = (hooks: StateHooks) => {
 
 export const Solver = (hooks: StateHooks) => {
   const [generator, setGenerator] = hooks.useGenerator;
-  const [info, setInfo] = hooks.useInfo;
 
   const ToggleButtons = [
     <ToggleButton
@@ -130,7 +126,7 @@ export const Solver = (hooks: StateHooks) => {
 
   return SolverArea<StateHooks, InfoProps>(
     hooks,
-    info,
+    defaultInfo,
     ToggleButtons,
     "vertical"
   );

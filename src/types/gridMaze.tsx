@@ -25,6 +25,12 @@ export type SolverProps = SolverPropsBase & {
   solver: typeof SolverOptions[keyof typeof SolverOptions] | null;
 };
 
+export const defaultInfo = {
+  progress: 0,
+  length: "-",
+  visited: "-",
+} as const;
+
 export type InfoProps = InfoPropsBase & {
   length: number | "-";
   visited: number | "-";

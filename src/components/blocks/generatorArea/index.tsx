@@ -31,7 +31,7 @@ export const GeneratorArea = <
             value={generator.seed}
             onChange={(e) => {
               setGenerator({ ...generator, seed: Number(e.target.value) });
-              setSolver({ ...solver, solver: "None" });
+              setSolver({ ...solver, solver: null });
               setInfo(defaultInfo);
             }}
           ></TextField>
@@ -45,7 +45,7 @@ export const GeneratorArea = <
               onChange={(_, newSize) => {
                 if (newSize !== null) {
                   setGenerator({ ...generator, size: newSize });
-                  setSolver({ ...solver, solver: "None" });
+                  setSolver({ ...solver, solver: null });
                   setInfo(defaultInfo);
                 }
               }}

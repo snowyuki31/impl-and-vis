@@ -26,7 +26,7 @@ const GraphColoringPage: NextPage = () => {
     useSolver: useState<SolverProps>({
       solver: null,
     }),
-    useInfo: useState<InfoProps>({}),
+    useInfo: useState<InfoProps>({ progress: 0 }),
   };
 
   return (

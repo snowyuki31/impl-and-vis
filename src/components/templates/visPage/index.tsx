@@ -48,11 +48,7 @@ const FieldTemplate = ({
 }) => {
   return (
     <>
-      <Box
-        sx={{
-          width: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" },
-        }}
-      >
+      <Box sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}>
         {field}
       </Box>
       <Box

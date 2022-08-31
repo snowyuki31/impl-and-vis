@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import Maze from "../../components/modules/gridMaze";
+import Cell from "../../components/atoms/cell";
 
 import {
   GeneratorProps,
@@ -11,11 +12,14 @@ import {
   StateHooks,
   SizeOptions,
   SolverOptions,
+  defaultInfo,
 } from "../../types/gridMaze";
 
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
+import CanvasArea from "../../components/blocks/canvasArea";
 
+import Stack from "@mui/material/Stack";
 import ToggleButton from "@mui/material/ToggleButton";
 
 const GridMaze: NextPage = () => {
@@ -27,10 +31,7 @@ const GridMaze: NextPage = () => {
     useSolver: useState<SolverProps>({
       solver: null,
     }),
-    useInfo: useState<InfoProps>({
-      length: "-",
-      visited: "-",
-    }),
+    useInfo: useState<InfoProps>(defaultInfo),
   };
 
   return (
@@ -47,13 +48,24 @@ const GridMaze: NextPage = () => {
 export default GridMaze;
 
 export const Field = (hooks: StateHooks) => {
-  return <Maze hooks={hooks}></Maze>;
+  const field = <Maze hooks={hooks}></Maze>;
+  return <CanvasArea hooks={hooks} field={field}></CanvasArea>;
 };
 
 export const InfoArea = (hooks: StateHooks) => {
   const [result, setResult] = hooks.useInfo;
   return (
     <>
+      <Stack direction="row" justifyContent="center" spacing={5} sx={{ mt: 1 }}>
+        <Stack direction="row" justifyContent="center">
+          <Cell states={["start"]} value={-1} width={-1} />
+          Start
+        </Stack>
+        <Stack direction="row" justifyContent="center">
+          <Cell states={["goal"]} value={-1} width={-1} />
+          Goal
+        </Stack>
+      </Stack>
       <div>Path Length: {result.length}</div>
       <div>Visited Cells: {result.visited}</div>
     </>
@@ -62,7 +74,6 @@ export const InfoArea = (hooks: StateHooks) => {
 
 export const Generator = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
-  const defaultInfo: InfoProps = { ...info, length: "-", visited: "-" };
   const ToggleButtons = [
     <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small
@@ -84,7 +95,6 @@ export const Generator = (hooks: StateHooks) => {
 
 export const Solver = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
-  const defaultInfo: InfoProps = { ...info, length: "-", visited: "-" };
   const ToggleButtons = [
     <ToggleButton key={SolverOptions.BFS} value={SolverOptions.BFS}>
       {SolverOptions.BFS}

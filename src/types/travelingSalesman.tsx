@@ -19,6 +19,12 @@ export const SizeOptions = {
   Extreme: 500,
 } as const;
 
+export const VisOptions = {
+  Width: 2000,
+  CircleColor: "rgba(255, 255, 255, 0.4)",
+  LineColor: "#C84B31",
+} as const;
+
 export type GeneratorProps = GeneratorPropsBase & {
   size: typeof SizeOptions[keyof typeof SizeOptions];
 };
@@ -31,6 +37,13 @@ export type InfoProps = InfoPropsBase & {
   minCost: string;
   optimal: string | null;
   status: string | null;
+};
+
+export const defaultInfo: InfoProps = {
+  progress: 0,
+  minCost: "inf",
+  optimal: null,
+  status: null,
 };
 
 export type StateHooks = StateHooksBase<GeneratorProps, SolverProps, InfoProps>;

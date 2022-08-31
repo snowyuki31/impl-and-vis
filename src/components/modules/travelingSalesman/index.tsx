@@ -7,28 +7,28 @@ import {
   Dispatch,
 } from "react";
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
 import { CanvasRenderingContext2D } from "canvas";
 
 import init, { Graph } from "wasm-lib";
 import useInterval from "../../../utils/useInterval";
 
-import styles from "./style.module.css";
 import {
   SolverOptions,
+  VisOptions,
   GeneratorProps,
   StateHooks,
 } from "../../../types/travelingSalesman";
+
+import Canvas from "../../blocks/canvas";
 
 export type CanvasState = {
   bgContext: CanvasRenderingContext2D | null;
   resultContext: CanvasRenderingContext2D | null;
 };
 
-const plotSize = 2000;
 function get_coords(idx: number) {
-  const y = idx % plotSize;
-  const x = (idx - y) / plotSize;
+  const y = idx % VisOptions.Width;
+  const x = (idx - y) / VisOptions.Width;
   return [x, y];
 }
 
@@ -57,24 +57,22 @@ const InitBgCanvas = (
   useEffect(() => {
     if (canvasState !== null && canvasState.bgContext !== null && graph) {
       console.log("len:", graph.get_nodes().length);
-      canvasState.bgContext.clearRect(0, 0, plotSize, plotSize);
+      canvasState.bgContext.clearRect(0, 0, VisOptions.Width, VisOptions.Width);
 
       graph.get_nodes().forEach((element: number) => {
         const [x, y] = get_coords(element);
         if (canvasState.bgContext !== null) {
+          canvasState.bgContext.strokeStyle = VisOptions.CircleColor;
           if (generator.size <= 300) {
-            canvasState.bgContext.strokeStyle = "rgba(255, 255, 255, 0.4)";
             canvasState.bgContext.lineWidth = 12;
             canvasState.bgContext.beginPath();
             canvasState.bgContext.arc(x, y, 40, 0, 360, false);
-            canvasState.bgContext.stroke();
           } else {
-            canvasState.bgContext.strokeStyle = "rgba(255, 255, 255, 0.4)";
             canvasState.bgContext.lineWidth = 7;
             canvasState.bgContext.beginPath();
             canvasState.bgContext.arc(x, y, 25, 0, 360, false);
-            canvasState.bgContext.stroke();
           }
+          canvasState.bgContext.stroke();
         }
       });
       canvasState.bgContext.save();
@@ -91,7 +89,6 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
   const [paths, setPaths] = useState<Uint32Array | null>();
   const [costs, setCosts] = useState<Float64Array | null>();
   const [index, setIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   const [canvasState, setCanvasState] = useState<CanvasState>({
     bgContext: null,
@@ -105,13 +102,17 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
   useEffect(() => {
     setPaths(null);
     setCosts(null);
-    setProgress(0);
     setIndex(0);
 
-    canvasState.resultContext?.clearRect(0, 0, plotSize, plotSize);
+    canvasState.resultContext?.clearRect(
+      0,
+      0,
+      VisOptions.Width,
+      VisOptions.Width
+    );
 
     init().then(() => {
-      const graph = Graph.new(generator.size, generator.seed, plotSize);
+      const graph = Graph.new(generator.size, generator.seed, VisOptions.Width);
       graph.build();
       setGraph(graph);
     });
@@ -157,10 +158,19 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
       if (index < paths.length) {
         let cost = costs[index / generator.size];
 
-        setResult({ ...result, minCost: cost.toFixed(2), optimal: null });
-        setProgress((index * 100) / paths.length);
-        canvasState.resultContext.clearRect(0, 0, plotSize, plotSize);
-        canvasState.resultContext.strokeStyle = "#C84B31";
+        setResult({
+          ...result,
+          minCost: cost.toFixed(2),
+          optimal: null,
+          progress: (index * 100) / paths.length,
+        });
+        canvasState.resultContext.clearRect(
+          0,
+          0,
+          VisOptions.Width,
+          VisOptions.Width
+        );
+        canvasState.resultContext.strokeStyle = VisOptions.LineColor;
         canvasState.resultContext.lineWidth = 12;
 
         canvasState.resultContext.beginPath();
@@ -181,39 +191,24 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
 
         setIndex(index + generator.size);
       } else if (index == paths.length) {
-        setProgress(100);
         if (
           solver.solver === SolverOptions.BF ||
           solver.solver === SolverOptions.DP
         ) {
-          setResult({ ...result, optimal: "optimal" });
+          setResult({ ...result, optimal: "optimal", progress: 100 });
         } else {
-          setResult({ ...result, optimal: "heuristic" });
+          setResult({ ...result, optimal: "heuristic", progress: 100 });
         }
       }
     }
   }, 100);
 
   return (
-    <>
-      <Box sx={{ height: { xs: "60vw", sm: "50vw", md: "40vw", lg: "400px" } }}>
-        <div className={styles.canvas_wrap}>
-          <canvas
-            ref={bgCanvasRef}
-            width={plotSize}
-            height={plotSize}
-            className={styles.canvas}
-          />
-          <canvas
-            ref={resultCanvasRef}
-            width={plotSize}
-            height={plotSize}
-            className={styles.canvas}
-          />
-        </div>
-      </Box>
-      <LinearProgress variant="determinate" color="inherit" value={progress} />
-    </>
+    <Canvas
+      bgCanvasRef={bgCanvasRef}
+      resultCanvasRef={resultCanvasRef}
+      size={VisOptions.Width}
+    ></Canvas>
   );
 };
 

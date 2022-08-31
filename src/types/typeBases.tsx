@@ -9,7 +9,9 @@ export type SolverPropsBase = {
   solver: string | null;
 };
 
-export type InfoPropsBase = {};
+export type InfoPropsBase = {
+  progress: number;
+};
 
 export type StateHooksBase<
   G extends GeneratorPropsBase,
