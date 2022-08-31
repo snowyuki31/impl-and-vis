@@ -69,7 +69,6 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
     setPaths(null);
     setCosts(null);
     setProgress(0);
-    setResult({ ...result, minCost: 2e9, status: null, optimal: null });
     setIndex(0);
 
     init().then(() => {

@@ -78,13 +78,20 @@ export const InfoArea = (hooks: TSPHooks) => {
 
 export const Generator = (hooks: TSPHooks) => {
   const [info, useInfo] = hooks.useInfo;
+
+  const defaultInfo = { ...info, minCost: 2e9, status: null, optimal: null };
+
   const ToggleButtons = [
     <ToggleButton value={InputOptions.numPlotsSmall}>Small</ToggleButton>,
     <ToggleButton value={InputOptions.numPlotsMedium}>Medium</ToggleButton>,
     <ToggleButton value={InputOptions.numPlotsLarge}>Large</ToggleButton>,
     <ToggleButton value={InputOptions.numPlotsExtreme}>Extreme</ToggleButton>,
   ];
-  return GeneratorArea<TSPHooks, TSPInfoProps>(hooks, info, ToggleButtons);
+  return GeneratorArea<TSPHooks, TSPInfoProps>(
+    hooks,
+    defaultInfo,
+    ToggleButtons
+  );
 };
 
 export const Solver = (hooks: TSPHooks) => {

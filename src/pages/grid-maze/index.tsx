@@ -14,6 +14,12 @@ import GeneratorArea from "../../components/blocks/generatorArea";
 
 import ToggleButton from "@mui/material/ToggleButton";
 
+const enum InputOptions {
+  widthSmall = 21,
+  widthMedium = 35,
+  widthLarge = 61,
+}
+
 const GridMaze: NextPage = () => {
   const hooks: MazeHooks = {
     useGenerator: useState<MazeGeneratorProps>({
@@ -60,9 +66,9 @@ export const Generator = (hooks: MazeHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info, length: -1, visited: -1 };
   const ToggleButtons = [
-    <ToggleButton value={21}>Small</ToggleButton>,
-    <ToggleButton value={35}>Medium</ToggleButton>,
-    <ToggleButton value={61}>Large</ToggleButton>,
+    <ToggleButton value={InputOptions.widthSmall}>Small</ToggleButton>,
+    <ToggleButton value={InputOptions.widthMedium}>Medium</ToggleButton>,
+    <ToggleButton value={InputOptions.widthLarge}>Large</ToggleButton>,
   ];
 
   return GeneratorArea<MazeHooks, MazeInfoProps>(
