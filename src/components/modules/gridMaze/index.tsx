@@ -22,7 +22,11 @@ export type MazeInfoProps = InfoProps & {
   visited: number;
 };
 
-export type MazeHooks = StateHooks<GeneratorProps, SolverProps, MazeInfoProps>;
+export type MazeHooks = StateHooks<
+  MazeGeneratorProps,
+  MazeSolverProps,
+  MazeInfoProps
+>;
 
 function buildMaze(grid: Grid) {
   var elements = [];
