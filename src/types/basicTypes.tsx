@@ -20,3 +20,9 @@ export type StateHooks<
   useSolver: [S, Dispatch<SetStateAction<S>>];
   useInfo: [I, Dispatch<SetStateAction<I>>];
 };
+
+export type GeneralStateHooks = {
+  useGenerator: any;
+  useSolver: any;
+  useInfo: any;
+};

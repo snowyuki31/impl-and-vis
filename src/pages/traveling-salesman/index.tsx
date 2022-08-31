@@ -9,14 +9,10 @@ import TravelingSalesman, {
   TSPHooks,
 } from "../../components/modules/travelingSalesman";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { AccordionDetails } from "@mui/material";
+import SolverArea from "../../components/blocks/solverArea";
+
 import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
+import GeneratorArea from "../../components/blocks/generatorArea";
 
 const enum InputOptions {
   numPlotsSmall = 10,
@@ -81,85 +77,35 @@ export const InfoArea = (hooks: TSPHooks) => {
 };
 
 export const Generator = (hooks: TSPHooks) => {
-  const [plots, setPlots] = hooks.useGenerator;
-  const [solver, setSolver] = hooks.useSolver;
-  const [result, setResult] = hooks.useInfo;
-  return (
-    <>
-      <Accordion sx={{ m: 1, bgcolor: "inherit" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <TextField
-            type="number"
-            label="seed"
-            variant="standard"
-            size="small"
-            value={plots.seed}
-            onChange={(e) => {
-              setPlots({ ...plots, seed: Number(e.target.value) });
-              setSolver({ ...solver, solver: "None" });
-            }}
-          ></TextField>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack direction="column">
-            <ToggleButtonGroup
-              color="primary"
-              exclusive
-              value={plots.size}
-              onChange={(_, newNumPlots) => {
-                if (newNumPlots !== null) {
-                  setPlots({ ...plots, size: newNumPlots });
-                  setSolver({ ...solver, solver: "None" });
-                }
-              }}
-              size="small"
-              orientation="vertical"
-            >
-              <ToggleButton value={InputOptions.numPlotsSmall}>
-                Small
-              </ToggleButton>
-              <ToggleButton value={InputOptions.numPlotsMedium}>
-                Medium
-              </ToggleButton>
-              <ToggleButton value={InputOptions.numPlotsLarge}>
-                Large
-              </ToggleButton>
-              <ToggleButton value={InputOptions.numPlotsExtreme}>
-                Extreme
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    </>
-  );
+  const [info, useInfo] = hooks.useInfo;
+  const ToggleButtons = [
+    <ToggleButton value={InputOptions.numPlotsSmall}>Small</ToggleButton>,
+    <ToggleButton value={InputOptions.numPlotsMedium}>Medium</ToggleButton>,
+    <ToggleButton value={InputOptions.numPlotsLarge}>Large</ToggleButton>,
+    <ToggleButton value={InputOptions.numPlotsExtreme}>Extreme</ToggleButton>,
+  ];
+  return GeneratorArea<TSPHooks, TSPInfoProps>(hooks, info, ToggleButtons);
 };
 
 export const Solver = (hooks: TSPHooks) => {
-  const [plots, setPlots] = hooks.useGenerator;
-  const [solver, setSolver] = hooks.useSolver;
-  const [result, setResult] = hooks.useInfo;
-  return (
-    <ToggleButtonGroup
-      color="primary"
-      value={solver.solver}
-      exclusive
-      onChange={(_, newSolver) => {
-        if (newSolver !== null) {
-          setSolver({ ...solver, solver: newSolver });
-        }
-      }}
-      size="medium"
-      orientation="vertical"
-    >
-      <ToggleButton value="brute-force" disabled={plots.size > 12}>
-        Brute Force
-      </ToggleButton>
-      <ToggleButton value="bitDP" disabled={plots.size > 20}>
-        Held-Karp
-      </ToggleButton>
-      <ToggleButton value="nn">Nearest Neighbor</ToggleButton>
-      <ToggleButton value="nn-2opt">NN + 2-opt</ToggleButton>
-    </ToggleButtonGroup>
+  const [generator, setGenerator] = hooks.useGenerator;
+  const [info, setInfo] = hooks.useInfo;
+
+  const ToggleButtons = [
+    <ToggleButton value="brute-force" disabled={generator.size > 12}>
+      Brute Force
+    </ToggleButton>,
+    <ToggleButton value="bitDP" disabled={generator.size > 20}>
+      Held-Karp
+    </ToggleButton>,
+    <ToggleButton value="nn">Nearest Neighbor</ToggleButton>,
+    <ToggleButton value="nn-2opt">NN + 2-opt</ToggleButton>,
+  ];
+
+  return SolverArea<TSPHooks, TSPInfoProps>(
+    hooks,
+    info,
+    ToggleButtons,
+    "vertical"
   );
 };
