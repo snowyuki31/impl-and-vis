@@ -82,10 +82,18 @@ export const Generator = (hooks: TSPHooks) => {
   const defaultInfo = { ...info, minCost: 2e9, status: null, optimal: null };
 
   const ToggleButtons = [
-    <ToggleButton value={InputOptions.numPlotsSmall}>Small</ToggleButton>,
-    <ToggleButton value={InputOptions.numPlotsMedium}>Medium</ToggleButton>,
-    <ToggleButton value={InputOptions.numPlotsLarge}>Large</ToggleButton>,
-    <ToggleButton value={InputOptions.numPlotsExtreme}>Extreme</ToggleButton>,
+    <ToggleButton key={"small"} value={InputOptions.numPlotsSmall}>
+      Small
+    </ToggleButton>,
+    <ToggleButton key={"medium"} value={InputOptions.numPlotsMedium}>
+      Medium
+    </ToggleButton>,
+    <ToggleButton key={"large"} value={InputOptions.numPlotsLarge}>
+      Large
+    </ToggleButton>,
+    <ToggleButton key={"extreme"} value={InputOptions.numPlotsExtreme}>
+      Extreme
+    </ToggleButton>,
   ];
   return GeneratorArea<TSPHooks, TSPInfoProps>(
     hooks,
@@ -99,14 +107,22 @@ export const Solver = (hooks: TSPHooks) => {
   const [info, setInfo] = hooks.useInfo;
 
   const ToggleButtons = [
-    <ToggleButton value="brute-force" disabled={generator.size > 12}>
+    <ToggleButton
+      key={"brute-force"}
+      value="brute-force"
+      disabled={generator.size > 12}
+    >
       Brute Force
     </ToggleButton>,
-    <ToggleButton value="bitDP" disabled={generator.size > 20}>
+    <ToggleButton key={"bitDP"} value="bitDP" disabled={generator.size > 20}>
       Held-Karp
     </ToggleButton>,
-    <ToggleButton value="nn">Nearest Neighbor</ToggleButton>,
-    <ToggleButton value="nn-2opt">NN + 2-opt</ToggleButton>,
+    <ToggleButton key={"nn"} value="nn">
+      Nearest Neighbor
+    </ToggleButton>,
+    <ToggleButton key={"nn-2opt"} value="nn-2opt">
+      NN + 2-opt
+    </ToggleButton>,
   ];
 
   return SolverArea<TSPHooks, TSPInfoProps>(

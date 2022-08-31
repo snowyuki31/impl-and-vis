@@ -57,9 +57,15 @@ export const Generator = (hooks: GraphColoringHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info };
   const ToggleButtons = [
-    <ToggleButton value={InputOptions.widthSmall}>Small</ToggleButton>,
-    <ToggleButton value={InputOptions.widthMedium}>Medium</ToggleButton>,
-    <ToggleButton value={InputOptions.widthLarge}>Large</ToggleButton>,
+    <ToggleButton key="small" value={InputOptions.widthSmall}>
+      Small
+    </ToggleButton>,
+    <ToggleButton key="medium" value={InputOptions.widthMedium}>
+      Medium
+    </ToggleButton>,
+    <ToggleButton key="large" value={InputOptions.widthLarge}>
+      Large
+    </ToggleButton>,
   ];
 
   return GeneratorArea<GraphColoringHooks, GraphColoringInfoProps>(
@@ -73,7 +79,9 @@ export const Solver = (hooks: GraphColoringHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info };
   const ToggleButtons = [
-    <ToggleButton value={"solver1"}>solver1</ToggleButton>,
+    <ToggleButton key="s1" value={"solver1"}>
+      solver1
+    </ToggleButton>,
   ];
 
   return SolverArea<GraphColoringHooks, GraphColoringInfoProps>(

@@ -50,7 +50,7 @@ function get_coords(idx: number) {
   return [x, y];
 }
 
-const initCanvas = (
+const InitCanvas = (
   bgCanvasRef: RefObject<HTMLCanvasElement>,
   resultCanvasRef: RefObject<HTMLCanvasElement>,
   setCanvasState: Dispatch<SetStateAction<CanvasState>>
@@ -67,7 +67,7 @@ const initCanvas = (
   }, []);
 };
 
-const initBgCanvas = (
+const InitBgCanvas = (
   canvasState: CanvasState,
   generator: TSPGeneratorProps,
   graph?: Graph
@@ -118,7 +118,7 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
   const bgCanvasRef = useRef<HTMLCanvasElement>(null);
   const resultCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  initCanvas(bgCanvasRef, resultCanvasRef, setCanvasState);
+  InitCanvas(bgCanvasRef, resultCanvasRef, setCanvasState);
 
   useEffect(() => {
     setPaths(null);
@@ -135,7 +135,7 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
     });
   }, [generator, solver]);
 
-  initBgCanvas(canvasState, generator, graph);
+  InitBgCanvas(canvasState, generator, graph);
 
   useEffect(() => {
     if (graph && solver.solver != "None") {

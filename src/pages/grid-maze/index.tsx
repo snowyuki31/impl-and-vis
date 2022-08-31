@@ -66,9 +66,15 @@ export const Generator = (hooks: MazeHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info, length: -1, visited: -1 };
   const ToggleButtons = [
-    <ToggleButton value={InputOptions.widthSmall}>Small</ToggleButton>,
-    <ToggleButton value={InputOptions.widthMedium}>Medium</ToggleButton>,
-    <ToggleButton value={InputOptions.widthLarge}>Large</ToggleButton>,
+    <ToggleButton key={"small"} value={InputOptions.widthSmall}>
+      Small
+    </ToggleButton>,
+    <ToggleButton key={"medium"} value={InputOptions.widthMedium}>
+      Medium
+    </ToggleButton>,
+    <ToggleButton key={"large"} value={InputOptions.widthLarge}>
+      Large
+    </ToggleButton>,
   ];
 
   return GeneratorArea<MazeHooks, MazeInfoProps>(
@@ -82,9 +88,15 @@ export const Solver = (hooks: MazeHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info, length: -1, visited: -1 };
   const ToggleButtons = [
-    <ToggleButton value={"bfs"}>BFS</ToggleButton>,
-    <ToggleButton value={"dfs"}>DFS</ToggleButton>,
-    <ToggleButton value={"astar"}>A*</ToggleButton>,
+    <ToggleButton key={"bfs"} value={"bfs"}>
+      BFS
+    </ToggleButton>,
+    <ToggleButton key={"dfs"} value={"dfs"}>
+      DFS
+    </ToggleButton>,
+    <ToggleButton key={"astar"} value={"astar"}>
+      A*
+    </ToggleButton>,
   ];
 
   return SolverArea<MazeHooks, MazeInfoProps>(
