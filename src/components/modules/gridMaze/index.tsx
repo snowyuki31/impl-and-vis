@@ -6,44 +6,29 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useInterval from "../../../utils/useInterval";
 
-import {
-  GeneratorProps,
-  SolverProps,
-  InfoProps,
-  StateHooks,
-} from "../../../types/basicTypes";
-
-export type MazeGeneratorProps = GeneratorProps;
-
-export type MazeSolverProps = SolverProps;
-
-export type MazeInfoProps = InfoProps & {
-  length: number;
-  visited: number;
-};
-
-export type MazeHooks = StateHooks<
-  MazeGeneratorProps,
-  MazeSolverProps,
-  MazeInfoProps
->;
+import { StateHooks, SolverOptions } from "../../../types/gridMaze";
 
 function buildMaze(grid: Grid) {
-  var elements = [];
+  let elements = [];
   const size = grid.width();
 
-  for (var i = 0; i < size; i++) {
-    for (var j = 0; j < size; j++) {
-      var states = [];
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      let states = [];
       let state = grid.get(i, j);
-      if (state === GridCell.Close) {
-        states.push("close");
-      } else if (state == GridCell.Start) {
-        states.push("start");
-      } else if (state == GridCell.Goal) {
-        states.push("goal");
-      } else {
-        states.push("open");
+
+      switch (grid.get(i, j)) {
+        case GridCell.Close:
+          states.push("close");
+          break;
+        case GridCell.Start:
+          states.push("start");
+          break;
+        case GridCell.Goal:
+          states.push("goal");
+          break;
+        default:
+          states.push("open");
       }
 
       if (grid.get_value(i, j) != -1 && state == GridCell.Open) {
@@ -58,7 +43,7 @@ function buildMaze(grid: Grid) {
   return elements;
 }
 
-const Maze = ({ hooks }: { hooks: MazeHooks }) => {
+const Maze = ({ hooks }: { hooks: StateHooks }) => {
   const [plots, setPlots] = hooks.useGenerator;
   const [solver, setSolver] = hooks.useSolver;
   const [result, setResult] = hooks.useInfo;
@@ -80,7 +65,7 @@ const Maze = ({ hooks }: { hooks: MazeHooks }) => {
       setGrid(grid);
       setMaze(buildMaze(grid));
     });
-  }, [plots.seed, plots.size]);
+  }, [plots]);
 
   useEffect(() => {
     setIndex(0);
@@ -89,14 +74,17 @@ const Maze = ({ hooks }: { hooks: MazeHooks }) => {
       grid.initialize_values();
       setMaze(buildMaze(grid));
 
-      var ret = null;
-
-      if (solver.solver === "bfs") {
-        ret = grid.bfs();
-      } else if (solver.solver === "dfs") {
-        ret = grid.dfs();
-      } else if (solver.solver === "astar") {
-        ret = grid.astar();
+      let ret;
+      switch (solver.solver) {
+        case SolverOptions.BFS:
+          ret = grid.bfs();
+          break;
+        case SolverOptions.DFS:
+          ret = grid.dfs();
+          break;
+        case SolverOptions.AStar:
+          ret = grid.astar();
+          break;
       }
 
       if (ret !== null) {
@@ -105,12 +93,12 @@ const Maze = ({ hooks }: { hooks: MazeHooks }) => {
         setPath(grid.trace_back());
       }
     }
-  }, [solver.solver]);
+  }, [solver]);
 
   useInterval(() => {
-    if (grid && steps && maze && path) {
+    if (grid && steps && maze && path && typeof result.visited == "number") {
       if (index < steps.length) {
-        var newMaze = [...maze];
+        let newMaze = [...maze];
         newMaze[steps[index]] = (
           <Cell
             states={["open", "visited"]}
@@ -123,7 +111,7 @@ const Maze = ({ hooks }: { hooks: MazeHooks }) => {
         setIndex(index + 1);
         setResult({ ...result, visited: result.visited + 1 });
       } else if (index >= steps.length && index < steps.length + path.length) {
-        var newMaze = [...maze];
+        let newMaze = [...maze];
         newMaze[path[index - steps.length]] = (
           <Cell
             states={["open", "on_path"]}

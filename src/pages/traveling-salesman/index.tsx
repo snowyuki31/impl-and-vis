@@ -2,37 +2,32 @@ import type { NextPage } from "next";
 import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
-import TravelingSalesman, {
-  TSPGeneratorProps,
-  TSPInfoProps,
-  TSPSolverProps,
-  TSPHooks,
-} from "../../components/modules/travelingSalesman";
-
+import TravelingSalesman from "../../components/modules/travelingSalesman";
 import SolverArea from "../../components/blocks/solverArea";
+
+import {
+  SolverOptions,
+  SizeOptions,
+  GeneratorProps,
+  SolverProps,
+  InfoProps,
+  StateHooks,
+} from "../../types/travelingSalesman";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import GeneratorArea from "../../components/blocks/generatorArea";
 
-const enum InputOptions {
-  numPlotsSmall = 10,
-  numPlotsMedium = 17,
-  numPlotsLarge = 100,
-  numPlotsExtreme = 500,
-}
-
 const TravelingSalesmanPage: NextPage = () => {
-  const hooks: TSPHooks = {
-    useGenerator: useState<TSPGeneratorProps>({
+  const hooks: StateHooks = {
+    useGenerator: useState<GeneratorProps>({
       seed: Math.floor(Math.random() * 100),
-      size: InputOptions.numPlotsSmall,
+      size: SizeOptions.Small,
     }),
-    useSolver: useState<TSPSolverProps>({
-      solver: "None",
+    useSolver: useState<SolverProps>({
+      solver: null,
     }),
-    useInfo: useState<TSPInfoProps>({
-      minCost: 2e9,
-      calculationTime: -1,
+    useInfo: useState<InfoProps>({
+      minCost: "inf",
       status: "",
       optimal: null,
     }),
@@ -51,11 +46,11 @@ const TravelingSalesmanPage: NextPage = () => {
 
 export default TravelingSalesmanPage;
 
-export const Field = (hooks: TSPHooks) => {
+export const Field = (hooks: StateHooks) => {
   return <TravelingSalesman hooks={hooks} />;
 };
 
-export const InfoArea = (hooks: TSPHooks) => {
+export const InfoArea = (hooks: StateHooks) => {
   const [plots, setPlots] = hooks.useGenerator;
   const [result, setResult] = hooks.useInfo;
   return (
@@ -63,8 +58,7 @@ export const InfoArea = (hooks: TSPHooks) => {
       <div>n={plots.size}</div>
       <div>{result.status}</div>
       <div>
-        Minimum Cost:{" "}
-        {result.minCost !== 2e9 ? result.minCost.toFixed(2) : "inf"}
+        Minimum Cost: {result.minCost}
         {result.optimal === null ? "" : " (" + result.optimal + ")"}
       </div>
       <div style={{ color: "#C84B31" }}>
@@ -76,56 +70,65 @@ export const InfoArea = (hooks: TSPHooks) => {
   );
 };
 
-export const Generator = (hooks: TSPHooks) => {
+export const Generator = (hooks: StateHooks) => {
   const [info, useInfo] = hooks.useInfo;
 
-  const defaultInfo = { ...info, minCost: 2e9, status: null, optimal: null };
+  const defaultInfo: InfoProps = {
+    ...info,
+    minCost: "inf",
+    status: null,
+    optimal: null,
+  };
 
   const ToggleButtons = [
-    <ToggleButton key={"small"} value={InputOptions.numPlotsSmall}>
+    <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small
     </ToggleButton>,
-    <ToggleButton key={"medium"} value={InputOptions.numPlotsMedium}>
+    <ToggleButton key={"medium"} value={SizeOptions.Medium}>
       Medium
     </ToggleButton>,
-    <ToggleButton key={"large"} value={InputOptions.numPlotsLarge}>
+    <ToggleButton key={"large"} value={SizeOptions.Large}>
       Large
     </ToggleButton>,
-    <ToggleButton key={"extreme"} value={InputOptions.numPlotsExtreme}>
+    <ToggleButton key={"extreme"} value={SizeOptions.Extreme}>
       Extreme
     </ToggleButton>,
   ];
-  return GeneratorArea<TSPHooks, TSPInfoProps>(
+  return GeneratorArea<StateHooks, InfoProps>(
     hooks,
     defaultInfo,
     ToggleButtons
   );
 };
 
-export const Solver = (hooks: TSPHooks) => {
+export const Solver = (hooks: StateHooks) => {
   const [generator, setGenerator] = hooks.useGenerator;
   const [info, setInfo] = hooks.useInfo;
 
   const ToggleButtons = [
     <ToggleButton
-      key={"brute-force"}
-      value="brute-force"
+      key={SolverOptions.BF}
+      value={SolverOptions.BF}
       disabled={generator.size > 12}
     >
-      Brute Force
+      {SolverOptions.BF}
     </ToggleButton>,
-    <ToggleButton key={"bitDP"} value="bitDP" disabled={generator.size > 20}>
-      Held-Karp
+    <ToggleButton
+      key={SolverOptions.DP}
+      value={SolverOptions.DP}
+      disabled={generator.size > 20}
+    >
+      {SolverOptions.DP}
     </ToggleButton>,
-    <ToggleButton key={"nn"} value="nn">
-      Nearest Neighbor
+    <ToggleButton key={SolverOptions.NN} value={SolverOptions.NN}>
+      {SolverOptions.NN}
     </ToggleButton>,
-    <ToggleButton key={"nn-2opt"} value="nn-2opt">
-      NN + 2-opt
+    <ToggleButton key={SolverOptions.TwoOpt} value={SolverOptions.TwoOpt}>
+      {SolverOptions.TwoOpt}
     </ToggleButton>,
   ];
 
-  return SolverArea<TSPHooks, TSPInfoProps>(
+  return SolverArea<StateHooks, InfoProps>(
     hooks,
     info,
     ToggleButtons,

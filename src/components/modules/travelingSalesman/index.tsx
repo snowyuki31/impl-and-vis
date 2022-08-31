@@ -15,28 +15,10 @@ import useInterval from "../../../utils/useInterval";
 
 import styles from "./style.module.css";
 import {
+  SolverOptions,
   GeneratorProps,
-  SolverProps,
-  InfoProps,
   StateHooks,
-} from "../../../types/basicTypes";
-
-export type TSPGeneratorProps = GeneratorProps;
-
-export type TSPSolverProps = SolverProps;
-
-export type TSPInfoProps = InfoProps & {
-  minCost: number;
-  optimal: string | null;
-  calculationTime: number;
-  status: string | null;
-};
-
-export type TSPHooks = StateHooks<
-  TSPGeneratorProps,
-  TSPSolverProps,
-  TSPInfoProps
->;
+} from "../../../types/travelingSalesman";
 
 export type CanvasState = {
   bgContext: CanvasRenderingContext2D | null;
@@ -69,7 +51,7 @@ const InitCanvas = (
 
 const InitBgCanvas = (
   canvasState: CanvasState,
-  generator: TSPGeneratorProps,
+  generator: GeneratorProps,
   graph?: Graph
 ) => {
   useEffect(() => {
@@ -100,7 +82,7 @@ const InitBgCanvas = (
   }, [graph]);
 };
 
-const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
+const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
   const [generator, setGenerator] = hooks.useGenerator;
   const [solver, setSolver] = hooks.useSolver;
   const [result, setResult] = hooks.useInfo;
@@ -138,31 +120,26 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
   InitBgCanvas(canvasState, generator, graph);
 
   useEffect(() => {
-    if (graph && solver.solver != "None") {
+    if (graph && solver.solver !== null) {
       const startTime = performance.now();
-      if (solver.solver === "brute-force") {
-        console.log("brute force running!");
-        let solved_paths = graph.solve_bf();
-        setPaths(solved_paths);
-        setCosts(graph.get_costs());
-      } else if (solver.solver === "bitDP") {
-        console.log("bitDP running!");
-        let solved_paths = graph.solve_dp();
-        setPaths(solved_paths);
-        setCosts(graph.get_costs());
-      } else if (solver.solver === "nn") {
-        console.log("nearest negibors running!");
-        let solved_paths = graph.solve_nn();
-        setPaths(solved_paths);
-        setCosts(graph.get_costs());
-      } else if (solver.solver === "nn-2opt") {
-        console.log("nearest negibors + 2 opt running!");
-        let solved_paths = graph.two_opt();
-        setPaths(solved_paths);
-        setCosts(graph.get_costs());
-
-        console.log(solved_paths.length);
+      let solved_paths;
+      switch (solver.solver) {
+        case SolverOptions.BF:
+          solved_paths = graph.solve_bf();
+          break;
+        case SolverOptions.DP:
+          solved_paths = graph.solve_dp();
+          break;
+        case SolverOptions.NN:
+          solved_paths = graph.solve_nn();
+          break;
+        case SolverOptions.TwoOpt:
+          solved_paths = graph.two_opt();
+          break;
       }
+
+      setPaths(solved_paths);
+      setCosts(graph.get_costs());
 
       const endTime = performance.now();
       setResult({
@@ -180,7 +157,7 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
       if (index < paths.length) {
         let cost = costs[index / generator.size];
 
-        setResult({ ...result, minCost: cost, optimal: null });
+        setResult({ ...result, minCost: cost.toFixed(2), optimal: null });
         setProgress((index * 100) / paths.length);
         canvasState.resultContext.clearRect(0, 0, plotSize, plotSize);
         canvasState.resultContext.strokeStyle = "#C84B31";
@@ -205,7 +182,10 @@ const TravelingSalesman = ({ hooks }: { hooks: TSPHooks }) => {
         setIndex(index + generator.size);
       } else if (index == paths.length) {
         setProgress(100);
-        if (solver.solver === "bitDP" || solver.solver === "brute-force") {
+        if (
+          solver.solver === SolverOptions.BF ||
+          solver.solver === SolverOptions.DP
+        ) {
           setResult({ ...result, optimal: "optimal" });
         } else {
           setResult({ ...result, optimal: "heuristic" });

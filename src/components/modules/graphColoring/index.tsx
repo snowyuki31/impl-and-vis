@@ -3,21 +3,9 @@ import {
   SolverProps,
   InfoProps,
   StateHooks,
-} from "../../../types/basicTypes";
+} from "../../../types/graphColoring";
 
-export type GraphColoringGeneratorProps = GeneratorProps;
-
-export type GraphColoringSolverProps = SolverProps;
-
-export type GraphColoringInfoProps = InfoProps & {};
-
-export type GraphColoringHooks = StateHooks<
-  GraphColoringGeneratorProps,
-  GraphColoringSolverProps,
-  GraphColoringInfoProps
->;
-
-const GraphColoring = ({ hooks }: { hooks: GraphColoringHooks }) => {
+const GraphColoring = ({ hooks }: { hooks: StateHooks }) => {
   return <></>;
 };
 

@@ -2,36 +2,34 @@ import type { NextPage } from "next";
 import { useState } from "react";
 
 import VisPage from "../../components/templates/visPage";
-import Maze, {
-  MazeGeneratorProps,
-  MazeSolverProps,
-  MazeInfoProps,
-  MazeHooks,
-} from "../../components/modules/gridMaze";
+import Maze from "../../components/modules/gridMaze";
+
+import {
+  GeneratorProps,
+  SolverProps,
+  InfoProps,
+  StateHooks,
+  SizeOptions,
+  SolverOptions,
+} from "../../types/gridMaze";
 
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
 
 import ToggleButton from "@mui/material/ToggleButton";
 
-const enum InputOptions {
-  widthSmall = 21,
-  widthMedium = 35,
-  widthLarge = 61,
-}
-
 const GridMaze: NextPage = () => {
-  const hooks: MazeHooks = {
-    useGenerator: useState<MazeGeneratorProps>({
+  const hooks: StateHooks = {
+    useGenerator: useState<GeneratorProps>({
       seed: Math.floor(Math.random() * 100),
-      size: 35,
+      size: SizeOptions.Small,
     }),
-    useSolver: useState<MazeSolverProps>({
-      solver: "None",
+    useSolver: useState<SolverProps>({
+      solver: null,
     }),
-    useInfo: useState<MazeInfoProps>({
-      length: -1,
-      visited: -1,
+    useInfo: useState<InfoProps>({
+      length: "-",
+      visited: "-",
     }),
   };
 
@@ -48,60 +46,56 @@ const GridMaze: NextPage = () => {
 
 export default GridMaze;
 
-export const Field = (hooks: MazeHooks) => {
+export const Field = (hooks: StateHooks) => {
   return <Maze hooks={hooks}></Maze>;
 };
 
-export const InfoArea = (hooks: MazeHooks) => {
+export const InfoArea = (hooks: StateHooks) => {
   const [result, setResult] = hooks.useInfo;
   return (
     <>
-      <div>Path Length: {result.length != -1 ? result.length : "-"}</div>
-      <div>Visited Cells: {result.visited != -1 ? result.visited : "-"}</div>
+      <div>Path Length: {result.length}</div>
+      <div>Visited Cells: {result.visited}</div>
     </>
   );
 };
 
-export const Generator = (hooks: MazeHooks) => {
+export const Generator = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
-  const defaultInfo = { ...info, length: -1, visited: -1 };
+  const defaultInfo: InfoProps = { ...info, length: "-", visited: "-" };
   const ToggleButtons = [
-    <ToggleButton key={"small"} value={InputOptions.widthSmall}>
+    <ToggleButton key={"small"} value={SizeOptions.Small}>
       Small
     </ToggleButton>,
-    <ToggleButton key={"medium"} value={InputOptions.widthMedium}>
+    <ToggleButton key={"medium"} value={SizeOptions.Medium}>
       Medium
     </ToggleButton>,
-    <ToggleButton key={"large"} value={InputOptions.widthLarge}>
+    <ToggleButton key={"large"} value={SizeOptions.Large}>
       Large
     </ToggleButton>,
   ];
 
-  return GeneratorArea<MazeHooks, MazeInfoProps>(
+  return GeneratorArea<StateHooks, InfoProps>(
     hooks,
     defaultInfo,
     ToggleButtons
   );
 };
 
-export const Solver = (hooks: MazeHooks) => {
+export const Solver = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
-  const defaultInfo = { ...info, length: -1, visited: -1 };
+  const defaultInfo: InfoProps = { ...info, length: "-", visited: "-" };
   const ToggleButtons = [
-    <ToggleButton key={"bfs"} value={"bfs"}>
-      BFS
+    <ToggleButton key={SolverOptions.BFS} value={SolverOptions.BFS}>
+      {SolverOptions.BFS}
     </ToggleButton>,
-    <ToggleButton key={"dfs"} value={"dfs"}>
-      DFS
+    <ToggleButton key={SolverOptions.DFS} value={SolverOptions.DFS}>
+      {SolverOptions.DFS}
     </ToggleButton>,
-    <ToggleButton key={"astar"} value={"astar"}>
-      A*
+    <ToggleButton key={SolverOptions.AStar} value={SolverOptions.AStar}>
+      {SolverOptions.AStar}
     </ToggleButton>,
   ];
 
-  return SolverArea<MazeHooks, MazeInfoProps>(
-    hooks,
-    defaultInfo,
-    ToggleButtons
-  );
+  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, ToggleButtons);
 };

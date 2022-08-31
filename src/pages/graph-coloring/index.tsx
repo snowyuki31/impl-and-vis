@@ -2,33 +2,31 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import VisPage from "../../components/templates/visPage";
 
-import GraphColoring, {
-  GraphColoringGeneratorProps,
-  GraphColoringSolverProps,
-  GraphColoringInfoProps,
-  GraphColoringHooks,
-} from "../../components/modules/graphColoring";
+import GraphColoring from "../../components/modules/graphColoring";
+
+import {
+  GeneratorProps,
+  SolverProps,
+  InfoProps,
+  StateHooks,
+  SizeOptions,
+  SolverOptions,
+} from "../../types/graphColoring";
 
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
 import ToggleButton from "@mui/material/ToggleButton";
 
-const enum InputOptions {
-  widthSmall = 21,
-  widthMedium = 35,
-  widthLarge = 61,
-}
-
 const GraphColoringPage: NextPage = () => {
-  const hooks: GraphColoringHooks = {
-    useGenerator: useState<GraphColoringGeneratorProps>({
+  const hooks: StateHooks = {
+    useGenerator: useState<GeneratorProps>({
       seed: Math.floor(Math.random() * 100),
       size: 35,
     }),
-    useSolver: useState<GraphColoringSolverProps>({
-      solver: "None",
+    useSolver: useState<SolverProps>({
+      solver: null,
     }),
-    useInfo: useState<GraphColoringInfoProps>({}),
+    useInfo: useState<InfoProps>({}),
   };
 
   return (
@@ -42,51 +40,47 @@ const GraphColoringPage: NextPage = () => {
   );
 };
 
-export const Field = (hooks: GraphColoringHooks) => {
+export const Field = (hooks: StateHooks) => {
   return <GraphColoring hooks={hooks}></GraphColoring>;
 };
 
-export const InfoArea = (hooks: GraphColoringHooks) => {
+export const InfoArea = (hooks: StateHooks) => {
   const [result, setResult] = hooks.useInfo;
   return <></>;
 };
 
 export default GraphColoringPage;
 
-export const Generator = (hooks: GraphColoringHooks) => {
+export const Generator = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
   const defaultInfo = { ...info };
   const ToggleButtons = [
-    <ToggleButton key="small" value={InputOptions.widthSmall}>
+    <ToggleButton key="small" value={SizeOptions.Small}>
       Small
     </ToggleButton>,
-    <ToggleButton key="medium" value={InputOptions.widthMedium}>
+    <ToggleButton key="medium" value={SizeOptions.Medium}>
       Medium
     </ToggleButton>,
-    <ToggleButton key="large" value={InputOptions.widthLarge}>
+    <ToggleButton key="large" value={SizeOptions.Large}>
       Large
     </ToggleButton>,
   ];
 
-  return GeneratorArea<GraphColoringHooks, GraphColoringInfoProps>(
+  return GeneratorArea<StateHooks, InfoProps>(
     hooks,
     defaultInfo,
     ToggleButtons
   );
 };
 
-export const Solver = (hooks: GraphColoringHooks) => {
+export const Solver = (hooks: StateHooks) => {
   const [info, setInfo] = hooks.useInfo;
-  const defaultInfo = { ...info };
+  const defaultInfo: InfoProps = { ...info };
   const ToggleButtons = [
-    <ToggleButton key="s1" value={"solver1"}>
-      solver1
+    <ToggleButton key={SolverOptions.Greedy} value={SolverOptions.Greedy}>
+      {SolverOptions.Greedy}
     </ToggleButton>,
   ];
 
-  return SolverArea<GraphColoringHooks, GraphColoringInfoProps>(
-    hooks,
-    defaultInfo,
-    ToggleButtons
-  );
+  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, ToggleButtons);
 };

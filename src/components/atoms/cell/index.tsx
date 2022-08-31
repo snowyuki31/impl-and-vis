@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Cell: React.FC<Props> = (props) => {
-  var className = `${styles.cell}`;
+  let className = `${styles.cell}`;
   props.states.forEach((state) => {
     className += ` ${styles[state]}`;
   });

@@ -5,9 +5,12 @@ import { AccordionDetails } from "@mui/material";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { GeneralStateHooks, InfoProps } from "../../../types/basicTypes";
+import { GeneralStateHooks, InfoPropsBase } from "../../../types/typeBases";
 
-export const GeneratorArea = <T extends GeneralStateHooks, I extends InfoProps>(
+export const GeneratorArea = <
+  T extends GeneralStateHooks,
+  I extends InfoPropsBase
+>(
   hooks: T,
   defaultInfo: I,
   ToggleButtons: JSX.Element[]

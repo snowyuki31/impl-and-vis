@@ -1,7 +1,10 @@
-import { GeneralStateHooks, InfoProps } from "../../../types/basicTypes";
+import { GeneralStateHooks, InfoPropsBase } from "../../../types/typeBases";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-export const SolverArea = <T extends GeneralStateHooks, I extends InfoProps>(
+export const SolverArea = <
+  T extends GeneralStateHooks,
+  I extends InfoPropsBase
+>(
   hooks: T,
   defaultInfo: I,
   ToggleButtons: JSX.Element[],
