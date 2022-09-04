@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 
 import useInterval from "../../../utils/useInterval";
 
-import { StateHooks, SolverOptions } from "../../../types/gridMaze";
+import { StateHooks, SolverOptions } from "../../../models/gridMaze";
 
 function buildMaze(grid: Grid) {
   let elements = [];

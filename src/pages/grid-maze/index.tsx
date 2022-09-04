@@ -13,7 +13,7 @@ import {
   SizeOptions,
   SolverOptions,
   defaultInfo,
-} from "../../types/gridMaze";
+} from "../../models/gridMaze";
 
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
@@ -21,7 +21,6 @@ import CanvasArea from "../../components/blocks/canvasArea";
 import InfoArea from "../../components/blocks/infoArea";
 
 import Stack from "@mui/material/Stack";
-import ToggleButton from "@mui/material/ToggleButton";
 
 const GridMaze: NextPage = () => {
   const hooks: StateHooks = {
@@ -87,37 +86,9 @@ export const Info = (hooks: StateHooks) => {
 };
 
 export const Generator = (hooks: StateHooks) => {
-  const ToggleButtons = [
-    <ToggleButton key={"small"} value={SizeOptions.Small}>
-      Small
-    </ToggleButton>,
-    <ToggleButton key={"medium"} value={SizeOptions.Medium}>
-      Medium
-    </ToggleButton>,
-    <ToggleButton key={"large"} value={SizeOptions.Large}>
-      Large
-    </ToggleButton>,
-  ];
-
-  return GeneratorArea<StateHooks, InfoProps>(
-    hooks,
-    defaultInfo,
-    ToggleButtons
-  );
+  return GeneratorArea<StateHooks, InfoProps>(hooks, defaultInfo, SizeOptions);
 };
 
 export const Solver = (hooks: StateHooks) => {
-  const ToggleButtons = [
-    <ToggleButton key={SolverOptions.BFS} value={SolverOptions.BFS}>
-      {SolverOptions.BFS}
-    </ToggleButton>,
-    <ToggleButton key={SolverOptions.DFS} value={SolverOptions.DFS}>
-      {SolverOptions.DFS}
-    </ToggleButton>,
-    <ToggleButton key={SolverOptions.AStar} value={SolverOptions.AStar}>
-      {SolverOptions.AStar}
-    </ToggleButton>,
-  ];
-
-  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, ToggleButtons);
+  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, SolverOptions);
 };

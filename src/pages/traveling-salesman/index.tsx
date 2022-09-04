@@ -6,6 +6,7 @@ import TravelingSalesman from "../../components/modules/travelingSalesman";
 import SolverArea from "../../components/blocks/solverArea";
 import InfoArea from "../../components/blocks/infoArea";
 import { CanvasArea } from "../../components/blocks/canvasArea";
+import GeneratorArea from "../../components/blocks/generatorArea";
 
 import {
   SolverOptions,
@@ -15,10 +16,7 @@ import {
   InfoProps,
   defaultInfo,
   StateHooks,
-} from "../../types/travelingSalesman";
-
-import ToggleButton from "@mui/material/ToggleButton";
-import GeneratorArea from "../../components/blocks/generatorArea";
+} from "../../models/travelingSalesman";
 
 const TravelingSalesmanPage: NextPage = () => {
   const hooks: StateHooks = {
@@ -57,7 +55,7 @@ export const Info = (hooks: StateHooks) => {
   const inputInfo = <div>n={generator.size}</div>;
   const outputInfo = (
     <div>
-      Minimum Cost: {result.minCost ? result.minCost.toFixed(2) : "inf"}
+      Cost: {result.minCost ? result.minCost.toFixed(2) : "inf"}
       {result.optimal === null ? "" : " (" + result.optimal + ")"}
     </div>
   );
@@ -67,60 +65,21 @@ export const Info = (hooks: StateHooks) => {
 };
 
 export const Generator = (hooks: StateHooks) => {
-  const ToggleButtons = [
-    <ToggleButton key={"small"} value={SizeOptions.Small}>
-      Small
-    </ToggleButton>,
-    <ToggleButton key={"medium"} value={SizeOptions.Medium}>
-      Medium
-    </ToggleButton>,
-    <ToggleButton key={"large"} value={SizeOptions.Large}>
-      Large
-    </ToggleButton>,
-    <ToggleButton key={"extreme"} value={SizeOptions.Extreme}>
-      Extreme
-    </ToggleButton>,
-  ];
-  return GeneratorArea<StateHooks, InfoProps>(
-    hooks,
-    defaultInfo,
-    ToggleButtons
-  );
+  return GeneratorArea<StateHooks, InfoProps>(hooks, defaultInfo, SizeOptions);
 };
 
 export const Solver = (hooks: StateHooks) => {
-  const [generator, setGenerator] = hooks.useGenerator;
+  const generator = hooks.useGenerator[0];
 
-  const ToggleButtons = [
-    <ToggleButton
-      key={SolverOptions.BF}
-      value={SolverOptions.BF}
-      disabled={generator.size > 12}
-    >
-      {SolverOptions.BF}
-    </ToggleButton>,
-    <ToggleButton
-      key={SolverOptions.DP}
-      value={SolverOptions.DP}
-      disabled={generator.size > 20}
-    >
-      {SolverOptions.DP}
-    </ToggleButton>,
-    <ToggleButton key={SolverOptions.NN} value={SolverOptions.NN}>
-      {SolverOptions.NN}
-    </ToggleButton>,
-    <ToggleButton key={SolverOptions.TwoOpt} value={SolverOptions.TwoOpt}>
-      {SolverOptions.TwoOpt}
-    </ToggleButton>,
-    <ToggleButton key={SolverOptions.ILS} value={SolverOptions.ILS}>
-      {SolverOptions.ILS}
-    </ToggleButton>,
-  ];
+  const isDisabled: { [name: string]: boolean } = {};
+  isDisabled[SolverOptions.BF] = generator.size > 12;
+  isDisabled[SolverOptions.DP] = generator.size > 20;
 
   return SolverArea<StateHooks, InfoProps>(
     hooks,
     defaultInfo,
-    ToggleButtons,
+    SolverOptions,
+    isDisabled,
     "vertical"
   );
 };

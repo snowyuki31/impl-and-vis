@@ -12,11 +12,10 @@ import {
   SizeOptions,
   SolverOptions,
   defaultInfo,
-} from "../../types/graphColoring";
+} from "../../models/graphColoring";
 
 import SolverArea from "../../components/blocks/solverArea";
 import GeneratorArea from "../../components/blocks/generatorArea";
-import ToggleButton from "@mui/material/ToggleButton";
 
 const GraphColoringPage: NextPage = () => {
   const hooks: StateHooks = {
@@ -53,31 +52,9 @@ export const InfoArea = (hooks: StateHooks) => {
 export default GraphColoringPage;
 
 export const Generator = (hooks: StateHooks) => {
-  const ToggleButtons = [
-    <ToggleButton key="small" value={SizeOptions.Small}>
-      Small
-    </ToggleButton>,
-    <ToggleButton key="medium" value={SizeOptions.Medium}>
-      Medium
-    </ToggleButton>,
-    <ToggleButton key="large" value={SizeOptions.Large}>
-      Large
-    </ToggleButton>,
-  ];
-
-  return GeneratorArea<StateHooks, InfoProps>(
-    hooks,
-    defaultInfo,
-    ToggleButtons
-  );
+  return GeneratorArea<StateHooks, InfoProps>(hooks, defaultInfo, SizeOptions);
 };
 
 export const Solver = (hooks: StateHooks) => {
-  const ToggleButtons = [
-    <ToggleButton key={SolverOptions.Greedy} value={SolverOptions.Greedy}>
-      {SolverOptions.Greedy}
-    </ToggleButton>,
-  ];
-
-  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, ToggleButtons);
+  return SolverArea<StateHooks, InfoProps>(hooks, defaultInfo, SolverOptions);
 };

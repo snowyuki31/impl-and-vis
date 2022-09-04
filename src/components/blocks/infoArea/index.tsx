@@ -1,4 +1,4 @@
-import { GeneralStateHooks } from "../../../types/typeBases";
+import { GeneralStateHooks } from "../../../models/typeBases";
 
 export const InfoArea = <T extends GeneralStateHooks>({
   hooks,

@@ -1,4 +1,4 @@
-import { GeneralStateHooks } from "../../../types/typeBases";
+import { GeneralStateHooks } from "../../../models/typeBases";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 

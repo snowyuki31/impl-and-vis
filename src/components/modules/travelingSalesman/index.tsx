@@ -16,7 +16,7 @@ import {
   VisOptions,
   GeneratorProps,
   StateHooks,
-} from "../../../types/travelingSalesman";
+} from "../../../models/travelingSalesman";
 
 import Canvas from "../../blocks/canvas";
 
