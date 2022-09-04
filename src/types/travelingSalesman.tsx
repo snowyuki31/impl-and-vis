@@ -10,6 +10,7 @@ export const SolverOptions = {
   DP: "Held-Karp",
   NN: "Nearest Neighbor",
   TwoOpt: "NN + 2-opt",
+  ILS: "Iterative Local Search",
 } as const;
 
 export const SizeOptions = {

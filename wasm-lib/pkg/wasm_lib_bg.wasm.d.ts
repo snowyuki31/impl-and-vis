@@ -32,6 +32,7 @@ export function graph_solve_bf(a: number, b: number): void;
 export function graph_solve_dp(a: number, b: number): void;
 export function graph_solve_nn(a: number, b: number): void;
 export function graph_two_opt(a: number, b: number): void;
+export function graph_iterative_local_search(a: number, b: number): void;
 export function __wbg_xorshift_free(a: number): void;
 export function xorshift_new(): number;
 export function xorshift_with_seed(a: number, b: number): number;

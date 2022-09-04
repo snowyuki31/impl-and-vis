@@ -56,6 +56,10 @@ export class Graph {
 * @returns {Uint32Array}
 */
   two_opt(): Uint32Array;
+/**
+* @returns {Uint32Array}
+*/
+  iterative_local_search(): Uint32Array;
 }
 /**
 */
@@ -223,6 +227,7 @@ export interface InitOutput {
   readonly graph_solve_dp: (a: number, b: number) => void;
   readonly graph_solve_nn: (a: number, b: number) => void;
   readonly graph_two_opt: (a: number, b: number) => void;
+  readonly graph_iterative_local_search: (a: number, b: number) => void;
   readonly __wbg_xorshift_free: (a: number) => void;
   readonly xorshift_new: () => number;
   readonly xorshift_with_seed: (a: number, b: number) => number;

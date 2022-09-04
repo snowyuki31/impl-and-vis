@@ -137,6 +137,8 @@ const TravelingSalesman = ({ hooks }: { hooks: StateHooks }) => {
         case SolverOptions.TwoOpt:
           solved_paths = graph.two_opt();
           break;
+        case SolverOptions.ILS:
+          solved_paths = graph.iterative_local_search();
       }
 
       setPaths(solved_paths);

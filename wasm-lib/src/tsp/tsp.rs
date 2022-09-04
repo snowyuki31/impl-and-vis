@@ -225,7 +225,20 @@ impl Graph {
             cur_path.push(paths[i]);
         }
 
-        for _ in 0..500 {
+        self.local_search(&mut cur_path, &mut paths, *self.costs.last().unwrap());
+        paths
+    }
+
+    fn local_search(
+        &mut self,
+        cur_path: &mut Vec<u32>,
+        path_log: &mut Vec<u32>,
+        prev_cost: f64,
+    ) -> f64 {
+        let l = self.nodes.len();
+        let mut cur_cost = prev_cost;
+        loop {
+            let mut flag = false;
             for i0 in 0..(l - 1) {
                 let i1 = i0 + 1;
                 for j0 in (i0 + 2)..l {
@@ -238,17 +251,82 @@ impl Graph {
                         let next1 = self.calc_distance(cur_path[j1], cur_path[i1]);
 
                         if cur0 + cur1 > next0 + next1 {
+                            flag = true;
                             cur_path[i1..=j0].reverse();
-                            self.costs
-                                .push(self.costs.last().unwrap() - (cur0 + cur1 - next0 - next1));
 
-                            for v in cur_path.iter() {
-                                paths.push(*v);
+                            cur_cost -= cur0 + cur1 - next0 - next1;
+
+                            if cur_cost < *self.costs.last().unwrap() {
+                                self.costs.push(cur_cost);
+
+                                for v in cur_path.iter() {
+                                    path_log.push(*v);
+                                }
                             }
                         }
                     }
                 }
             }
+            if !flag {
+                break;
+            }
+        }
+        cur_cost
+    }
+
+    pub fn iterative_local_search(&mut self) -> Vec<u32> {
+        let mut paths = self.solve_nn();
+        let l = self.nodes.len();
+
+        let mut cur_path = Vec::new();
+        for i in (paths.len() - l)..(paths.len()) {
+            cur_path.push(paths[i]);
+        }
+
+        let mut prev_cost =
+            self.local_search(&mut cur_path, &mut paths, *self.costs.last().unwrap());
+
+        for _ in 0..200 {
+            // kick
+            let (mut a, mut c, mut e, mut g) = (0, 0, 0, 0);
+            while !(a < c && c < e && e < g) {
+                (a, c, e, g) = (
+                    self.rng.rand(l as u64) as usize,
+                    self.rng.rand(l as u64) as usize,
+                    self.rng.rand(l as u64) as usize,
+                    self.rng.rand(l as u64) as usize,
+                );
+            }
+            let mut next_path = Vec::new();
+            for i in a..c {
+                next_path.push(cur_path[i]);
+            }
+            for i in g..(a + l) {
+                next_path.push(cur_path[i % l]);
+            }
+            for i in e..g {
+                next_path.push(cur_path[i]);
+            }
+            for i in c..e {
+                next_path.push(cur_path[i]);
+            }
+            let (b, d, f, h) = (c - 1, e - 1, g - 1, (a - 1 + l) % l);
+
+            let bc = self.calc_distance(cur_path[b], cur_path[c]);
+            let de = self.calc_distance(cur_path[d], cur_path[e]);
+            let fg = self.calc_distance(cur_path[f], cur_path[g]);
+            let ha = self.calc_distance(cur_path[h], cur_path[a]);
+
+            let bg = self.calc_distance(cur_path[b], cur_path[g]);
+            let da = self.calc_distance(cur_path[d], cur_path[a]);
+            let fc = self.calc_distance(cur_path[f], cur_path[c]);
+            let he = self.calc_distance(cur_path[h], cur_path[e]);
+
+            prev_cost += (bg + da + fc + he) - (bc + de + fg + ha);
+
+            cur_path = next_path;
+
+            prev_cost = self.local_search(&mut cur_path, &mut paths, prev_cost);
         }
 
         paths

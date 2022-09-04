@@ -112,6 +112,9 @@ export const Solver = (hooks: StateHooks) => {
     <ToggleButton key={SolverOptions.TwoOpt} value={SolverOptions.TwoOpt}>
       {SolverOptions.TwoOpt}
     </ToggleButton>,
+    <ToggleButton key={SolverOptions.ILS} value={SolverOptions.ILS}>
+      {SolverOptions.ILS}
+    </ToggleButton>,
   ];
 
   return SolverArea<StateHooks, InfoProps>(
