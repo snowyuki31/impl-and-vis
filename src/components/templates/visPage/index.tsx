@@ -16,8 +16,8 @@ const VisPage = ({
   description?: string;
   field: React.ReactNode;
   infoArea: React.ReactNode;
-  generator: React.ReactNode;
-  solver: React.ReactNode;
+  generator?: React.ReactNode;
+  solver?: React.ReactNode;
 }) => {
   return (
     <Layout pagename={pagename}>
