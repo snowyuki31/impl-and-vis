@@ -5,6 +5,8 @@ import {
   StateHooksBase,
 } from "./typeBases";
 
+import { Dispatch, SetStateAction } from "react";
+
 export const SolverOptions = {
   BFS: "BFS",
   DFS: "DFS",
@@ -38,3 +40,9 @@ export type InfoProps = InfoPropsBase & {
 };
 
 export type StateHooks = StateHooksBase<GeneratorProps, SolverProps, InfoProps>;
+
+export type setTypeObject = {
+  setGenerator: Dispatch<SetStateAction<GeneratorProps>>;
+  setSolver: Dispatch<SetStateAction<SolverProps>>;
+  setInfo: Dispatch<SetStateAction<InfoProps>>;
+};

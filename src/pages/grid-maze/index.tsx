@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState, createContext } from "react";
 
 import VisPage from "../../components/templates/visPage";
 import Maze from "../../components/modules/gridMaze";
@@ -13,6 +13,7 @@ import {
   SizeOptions,
   SolverOptions,
   defaultInfo,
+  setTypeObject,
 } from "../../models/gridMaze";
 
 import SolverArea from "../../components/blocks/solverArea";
@@ -21,6 +22,8 @@ import CanvasArea from "../../components/blocks/canvasArea";
 import InfoArea from "../../components/blocks/infoArea";
 
 import Stack from "@mui/material/Stack";
+
+export const setStateContext = createContext({} as setTypeObject);
 
 const GridMaze: NextPage = () => {
   const hooks: StateHooks = {
@@ -34,14 +37,23 @@ const GridMaze: NextPage = () => {
     useInfo: useState<InfoProps>(defaultInfo),
   };
 
+  const [generator, setGenerator] = useState<GeneratorProps>({
+    seed: Math.floor(Math.random() * 100),
+    size: SizeOptions.Small,
+  });
+  const [solver, setSolver] = useState<SolverProps>({ solver: null });
+  const [info, setInfo] = useState<InfoProps>(defaultInfo);
+
   return (
-    <VisPage
-      pagename="Grid Maze"
-      field={Field(hooks)}
-      infoArea={Info(hooks)}
-      generator={Generator(hooks)}
-      solver={Solver(hooks)}
-    ></VisPage>
+    <setStateContext.Provider value={{ setGenerator, setSolver, setInfo }}>
+      <VisPage
+        pagename="Grid Maze"
+        field={Field(hooks)}
+        infoArea={Info(hooks)}
+        generator={Generator(hooks)}
+        solver={Solver(hooks)}
+      ></VisPage>
+    </setStateContext.Provider>
   );
 };
 
